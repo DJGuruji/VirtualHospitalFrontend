@@ -5,7 +5,6 @@ import { useAuthStore } from "../store/authStore";
 import { useNavigate } from "react-router-dom";
 import axios from "../axios";
 import config from "../config";
-import logo from "/fmc.jpeg"
 import {
   AiOutlineUser,
   AiOutlineLogin,
@@ -67,7 +66,7 @@ const Navbar = () => {
 
   return (
     <>
-      <nav className="bg-zinc-700 p-1  sticky top-0">
+      <nav className="bg-blue-500 p-3 backdrop-blur-md   sticky top-0">
         <div className="flex justify-between items-center">
           {user && (
             <div className="relative">
@@ -81,8 +80,7 @@ const Navbar = () => {
                       onClick={toggleSubmenu}
                     />
                   ) : (
-                    <img
-                    src={logo}
+                    <CgProfile
                       className="bg-zinc-300 text-zinc-600  w-11 h-11 rounded-full cursor-pointer"
                       onClick={toggleSubmenu}
                     />
@@ -104,26 +102,41 @@ const Navbar = () => {
                       View Profile
                     </NavLink>
                   </li>
-                  {/* <li className="p-2">
+                  <li className="p-2">
                     <NavLink
-                      to="/connections"
+                      to={`/profile/${user._id}`}
                       onClick={toggleSubmenu}
                       className="text-center flex items-center hover:bg-zinc-200 p-2 rounded-xl"
                     >
-                      <PiNetwork className="mr-1" />
-                      Connections
+                      <CgProfile className="mr-1" />
+                      Book Appointment
                     </NavLink>
                   </li>
                   <li className="p-2">
                     <NavLink
-                      to="/likes"
+                      to={`/profile/${user._id}`}
                       onClick={toggleSubmenu}
                       className="text-center flex items-center hover:bg-zinc-200 p-2 rounded-xl"
                     >
-                      <FcLike className="mr-1" />
-                      Wish List
+                      <CgProfile className="mr-1" />
+                      My Appointments
                     </NavLink>
-                  </li> */}
+                  </li>
+                  {(user.role === "admin" || user.role === "staff") && (
+                    <>
+                      <li className="p-2">
+                        <NavLink
+                          to={`/profile/${user._id}`}
+                          onClick={toggleSubmenu}
+                          className="text-center flex items-center hover:bg-zinc-200 p-2 rounded-xl"
+                        >
+                          <CgProfile className="mr-1" />
+                          All Appointments
+                        </NavLink>
+                      </li>
+                    </>
+                  )}
+
                   <li className="p-2">
                     <NavLink
                       to="/settings"
@@ -187,16 +200,18 @@ const Navbar = () => {
                   user.role === "admin" ||
                   user.role === "staff") && (
                   <>
-                    <li className="text-zinc-400 self-center font-sans">
-                      Hello {user.name}
+                    <li className="text-zinc-700 self-center font-sans">
+                    Welcome  {user.role === "staff" ? "Dr. " : ""}
+                      {user.name}
                     </li>
+
                     <li className="text-white self-center">
                       <NavLink
                         to="/"
                         className={({ isActive }) =>
                           isActive
-                            ? "flex items-center p-1 bg-zinc-600 rounded-xl underline"
-                            : "flex items-center hover:bg-zinc-600 rounded-xl"
+                            ? "flex items-center p-1 bg-blue-600 font-bold rounded-xl underline"
+                            : "flex items-center hover:bg-blue-600 rounded-xl"
                         }
                       >
                         <AiOutlineHome className="mr-1 " /> Home
@@ -207,10 +222,9 @@ const Navbar = () => {
                         to="/posts"
                         className={({ isActive }) =>
                           isActive
-                            ? "flex items-center p-1 bg-zinc-600 rounded-xl underline"
-                            : "flex items-center hover:bg-zinc-600 rounded-xl"
+                            ? "flex items-center p-1 bg-blue-600 font-bold rounded-xl underline"
+                            : "flex items-center hover:bg-blue-600 rounded-xl"
                         }
-
                       >
                         <AiOutlineFileText className="mr-1" /> My Posts
                       </NavLink>
@@ -220,8 +234,8 @@ const Navbar = () => {
                         to="/myvideo"
                         className={({ isActive }) =>
                           isActive
-                            ? "flex items-center p-1 bg-zinc-600 rounded-xl underline"
-                            : "flex items-center hover:bg-zinc-600 rounded-xl"
+                            ? "flex items-center p-1 bg-blue-600 font-bold rounded-xl underline"
+                            : "flex items-center hover:bg-blue-600 rounded-xl"
                         }
                       >
                         <MdOutlineOndemandVideo className="mr-1" /> My Videos
@@ -232,8 +246,8 @@ const Navbar = () => {
                         to="/videoposts"
                         className={({ isActive }) =>
                           isActive
-                            ? "flex items-center p-1 bg-zinc-600 rounded-xl underline"
-                            : "flex items-center hover:bg-zinc-600 rounded-xl"
+                            ? "flex items-center p-1 bg-blue-600 font-bold rounded-xl underline"
+                            : "flex items-center hover:bg-blue-600 rounded-xl"
                         }
                       >
                         <MdOutlineVideoLibrary className="mr-1" /> Videos
@@ -244,8 +258,8 @@ const Navbar = () => {
                         to="/addwork"
                         className={({ isActive }) =>
                           isActive
-                            ? "flex items-center p-1 bg-zinc-600 rounded-xl underline"
-                            : "flex items-center hover:bg-zinc-600 rounded-xl"
+                            ? "flex items-center p-1 bg-blue-600 font-bold rounded-xl underline"
+                            : "flex items-center hover:bg-blue-600 rounded-xl"
                         }
                       >
                         <MdWorkspacePremium className="mr-1" /> Add Work
@@ -260,8 +274,8 @@ const Navbar = () => {
                         to="/users"
                         className={({ isActive }) =>
                           isActive
-                            ? "flex items-center p-1 bg-zinc-600 rounded-xl underline"
-                            : "flex items-center hover:bg-zinc-600 rounded-xl"
+                            ? "flex items-center p-1 bg-blue-600 font-boldrounded-xl underline"
+                            : "flex items-center hover:bg-blue-600 rounded-xl"
                         }
                       >
                         <HiOutlineUsers className="mr-1" />
@@ -286,11 +300,11 @@ const Navbar = () => {
                     to="/ai"
                     className={({ isActive }) =>
                       isActive
-                        ? "flex items-center p-1 bg-zinc-600 rounded-xl underline"
-                        : "flex items-center hover:bg-zinc-600 rounded-xl"
+                        ? "flex items-center p-1 bg-blue-600 font-bold rounded-xl underline"
+                        : "flex items-center hover:bg-blue-600 rounded-xl"
                     }
                   >
-                    <BsChatSquareDots className="mr-1" /> Chat
+                    <BsChatSquareDots className="mr-1" /> AI Chat
                   </NavLink>
                 </li>
               </>
@@ -299,7 +313,7 @@ const Navbar = () => {
         </div>
         {dropdownOpen && (
           <div className="md:hidden">
-            <div className="bg-zinc-700 text-white w-28 absolute mt-2 rounded-md shadow-lg bg-white right-0 border-2 border-blue-500">
+            <div className="w-28 absolute mt-2 rounded-md shadow-lg bg-white right-0 border-2 border-blue-500">
               <ul className="flex flex-col space-y-2 mt-2 flex-wrap">
                 {!user ? (
                   <>
@@ -380,7 +394,7 @@ const Navbar = () => {
                             to="/videoposts"
                             className={({ isActive }) =>
                               isActive
-                                ? "flex items-center hover:bg-zinc-600 p-2 rounded-xl underline"
+                                ? "flex items-center bg-zinc-300 p-2 rounded-xl underline"
                                 : "flex items-center hover:bg-zinc-600 rounded-xl"
                             }
                             onClick={closeDropdown}
@@ -433,7 +447,7 @@ const Navbar = () => {
                     )}
                     <li className="text-lg">
                       <NavLink
-                        to="/ai"
+                        to="/addwork"
                         className={({ isActive }) =>
                           isActive
                             ? "flex items-center hover:bg-zinc-600 rounded-xl underline"
@@ -441,7 +455,7 @@ const Navbar = () => {
                         }
                         onClick={closeDropdown}
                       >
-                        <BsChatSquareDots /> Chat
+                        <BsChatSquareDots /> AI Chat
                       </NavLink>
                     </li>
                   </>

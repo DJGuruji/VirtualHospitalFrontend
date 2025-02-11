@@ -40,7 +40,7 @@ const Profile = () => {
       } catch (error) {
         toast.error("Error fetching user profile:", error);
       } finally {
-        setLoading(false);
+        setLoadings(false);
       }
     };
 
