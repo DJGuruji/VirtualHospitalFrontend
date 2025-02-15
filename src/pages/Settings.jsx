@@ -3,9 +3,10 @@ import { Link } from "react-router-dom";
 
 const Settings = () => {
   return (
-    <div>
+    <div className="dark:bg-slate-900 w-full min-h-screen flex justify-center ">
+       <div className="  dark:bg-slate-900 w-full ">
       <ul>
-        <li className="mt-7 ">
+        <li className="mt-5">
           <Link
             to="/changepass"
             className="text-blue-600 font-bold hover:bg-zinc-300 p-2  rounded-xl "
@@ -20,15 +21,15 @@ const Settings = () => {
       >
         Delete Account
       </button>
-      <dialog id="my_modal_1" className="modal">
+      <dialog id="my_modal_1" className="modal dark:bg-slate-800 ">
         <div className="modal-box p-5 rounded-md ">
           <h3 className="font-bold text-lg text-red-600 p-5">Delete Account</h3>
           <p className="py-4">
             {" "}
-            <p className="mb-4 text-zinc-800">
+            <p className="mb-4 text-zinc-800 dark:text-white">
               Are you sure you want to delete your account permanently?
             </p>
-            <p className="mb-4 text-zinc-800">
+            <p className="mb-4 text-zinc-800 dark:text-white">
               Deleting your account will remove all your Posts ,videos and all
               actions
             </p>
@@ -47,6 +48,7 @@ const Settings = () => {
           </div>
         </div>
       </dialog>
+    </div>
     </div>
   );
 };

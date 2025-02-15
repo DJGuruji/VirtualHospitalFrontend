@@ -1,29 +1,23 @@
 import React, { useState, useEffect } from "react";
 import { NavLink, Link } from "react-router-dom";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 import { useAuthStore } from "../store/authStore";
 import { useNavigate } from "react-router-dom";
 import axios from "../axios";
 import config from "../config";
+import logo from "/vma.jpeg"
 import {
   AiOutlineUser,
   AiOutlineLogin,
   AiOutlineLogout,
   AiOutlineHome,
-  AiFillHome,
   AiOutlineFileText,
-  AiFillWechatWork,
-  AiOutlineSearch,
 } from "react-icons/ai";
 import { HiOutlineUsers } from "react-icons/hi";
 import { CgProfile } from "react-icons/cg";
-import { PiNetwork } from "react-icons/pi";
 import { IoSettingsOutline } from "react-icons/io5";
-import { FcLike } from "react-icons/fc";
-import { LiaUserLockSolid } from "react-icons/lia";
 import { BsChatSquareDots } from "react-icons/bs";
 import {
-  MdOutlineCleaningServices,
   MdOutlineOndemandVideo,
   MdOutlineVideoLibrary,
   MdWorkspacePremium,
@@ -36,7 +30,11 @@ const Navbar = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [submenuOpen, setSubmenuOpen] = useState(false);
   const [photo, setPhoto] = useState(null);
+  const [darkMode, setDarkMode] = useState(
+    localStorage.getItem("darkMode") === "true"
+  );
 
+  // Toggle functions
   const toggleDropdown = () => setDropdownOpen(!dropdownOpen);
   const closeDropdown = () => setDropdownOpen(false);
   const toggleSubmenu = () => setSubmenuOpen(!submenuOpen);
@@ -47,6 +45,13 @@ const Navbar = () => {
     navigate("/login");
   };
 
+  // Apply dark mode class to html element and store the preference
+  useEffect(() => {
+    document.documentElement.classList.toggle("dark", darkMode);
+    localStorage.setItem("darkMode", darkMode);
+  }, [darkMode]);
+
+  // Fetch user profile (for photo, etc.)
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -65,38 +70,44 @@ const Navbar = () => {
   }, []);
 
   return (
-    <>
-      <nav className="bg-blue-500 p-3 backdrop-blur-md   sticky top-0">
-        <div className="flex justify-between items-center">
+    <nav className="bg-white dark:bg-gray-900 dark:text-white p-3 backdrop-blur-md border-b-2 border-blue-600 sticky top-0">
+      <div className="flex justify-between items-center">
+        {/* Left Section */}
+        <div className="flex items-center">
           {user && (
             <div className="relative">
-              <div className="flex ">
-                <span className="rounded-full ">
+              <div className="flex">
+                <span className="rounded-full">
                   {photo ? (
                     <img
-                      src={config.API_URL + photo}
+                      src={photo}
                       alt="User profile"
-                      className="mx-auto md:w-16 lg:w-16 xl:w-16 md:h-16 lg:h-16 xl:h-16 w-11 h-11 rounded-full object-cover "
+                      className="mx-auto w-11 h-11 md:w-16 md:h-16 rounded-full object-cover cursor-pointer"
                       onClick={toggleSubmenu}
                     />
                   ) : (
-                    <CgProfile
+                    // <CgProfile
+                    //   className="bg-zinc-300 dark:bg-gray-700 text-zinc-600 dark:text-white w-11 h-11 rounded-full cursor-pointer"
+                    //   onClick={toggleSubmenu}
+                    // />
+                    <img
+                    src={logo}
                       className="bg-zinc-300 text-zinc-600  w-11 h-11 rounded-full cursor-pointer"
                       onClick={toggleSubmenu}
                     />
                   )}
                 </span>
-                <span className="flex  items-center ml-6">
-                  <UserSearch className="" />
+                <span className="flex items-center ml-6">
+                  <UserSearch />
                 </span>
               </div>
               {submenuOpen && (
-                <ul className="sub-menu absolute mt-2 rounded-md shadow-lg bg-white border-2 border-blue-500 left-0">
+                <ul className="absolute mt-2 rounded-md shadow-lg bg-white dark:bg-gray-800 dark:text-white border-2 border-blue-500 left-0">
                   <li className="p-2">
                     <NavLink
                       to={`/profile/${user._id}`}
                       onClick={toggleSubmenu}
-                      className="text-center flex items-center hover:bg-zinc-200 p-2 rounded-xl"
+                      className="flex items-center hover:bg-zinc-200 dark:hover:bg-gray-700 p-2 rounded-xl"
                     >
                       <CgProfile className="mr-1" />
                       View Profile
@@ -104,53 +115,76 @@ const Navbar = () => {
                   </li>
                   <li className="p-2">
                     <NavLink
-                      to={`/profile/${user._id}`}
+                      to="/history"
                       onClick={toggleSubmenu}
-                      className="text-center flex items-center hover:bg-zinc-200 p-2 rounded-xl"
+                      className="flex items-center hover:bg-zinc-200 dark:hover:bg-gray-700 p-2 rounded-xl"
                     >
                       <CgProfile className="mr-1" />
-                      Book Appointment
+                      Appointment History
                     </NavLink>
                   </li>
-                  <li className="p-2">
-                    <NavLink
-                      to={`/profile/${user._id}`}
-                      onClick={toggleSubmenu}
-                      className="text-center flex items-center hover:bg-zinc-200 p-2 rounded-xl"
-                    >
-                      <CgProfile className="mr-1" />
-                      My Appointments
-                    </NavLink>
-                  </li>
+                  {user.role !== "doctor" && (
+                    <li className="p-2">
+                      <NavLink
+                        to="/applydoc"
+                        onClick={toggleSubmenu}
+                        className="flex items-center hover:bg-zinc-200 dark:hover:bg-gray-700 p-2 rounded-xl"
+                      >
+                        <CgProfile className="mr-1" />
+                        Register as doctor
+                      </NavLink>
+                    </li>
+                  )}
+                  {user.role === "doctor" && (
+                    <li className="p-2">
+                      <NavLink
+                        to="/appointments"
+                        onClick={toggleSubmenu}
+                        className="flex items-center hover:bg-zinc-200 dark:hover:bg-gray-700 p-2 rounded-xl"
+                      >
+                        <CgProfile className="mr-1" />
+                        Appointments
+                      </NavLink>
+                    </li>
+                  )}
                   {(user.role === "admin" || user.role === "staff") && (
                     <>
                       <li className="p-2">
                         <NavLink
-                          to={`/profile/${user._id}`}
+                          to="/allappointments"
                           onClick={toggleSubmenu}
-                          className="text-center flex items-center hover:bg-zinc-200 p-2 rounded-xl"
+                          className="flex items-center hover:bg-zinc-200 dark:hover:bg-gray-700 p-2 rounded-xl"
                         >
                           <CgProfile className="mr-1" />
                           All Appointments
                         </NavLink>
                       </li>
+                      <li className="p-2">
+                        <NavLink
+                          to="/docapprove"
+                          onClick={toggleSubmenu}
+                          className="flex items-center hover:bg-zinc-200 dark:hover:bg-gray-700 p-2 rounded-xl"
+                        >
+                          <CgProfile className="mr-1" />
+                          Doctors Administration
+                        </NavLink>
+                      </li>
                     </>
                   )}
-
                   <li className="p-2">
                     <NavLink
                       to="/settings"
-                      className="text-center flex items-center hover:bg-zinc-200 p-2 rounded-xl"
                       onClick={toggleSubmenu}
+                      className="flex items-center hover:bg-zinc-200 dark:hover:bg-gray-700 p-2 rounded-xl"
                     >
                       <IoSettingsOutline className="mr-1" />
                       Settings
                     </NavLink>
                   </li>
-                  <li className="text-white self-center p-4">
+                  <li className="p-4">
                     <button
                       onClick={handleLogoutAndToggle}
-                      className="border-red-700 text-white flex items-center bg-red-500 hover:bg-red-600 rounded-md p-1"
+                      className="flex items-center bg-red-500 hover:bg-red-600 text-white rounded-md p-1"
                     >
                       <AiOutlineLogout className="mr-2" /> Logout
                     </button>
@@ -159,313 +193,302 @@ const Navbar = () => {
               )}
             </div>
           )}
-          <button
-            className="md:hidden text-white mr-2"
-            onClick={toggleDropdown}
-          >
-            <div className="w-8 h-1 bg-white m-1 rounded-lg"></div>
-            <div className="ml-3 w-6 h-1 bg-white m-1 rounded-lg"></div>
-          </button>
-          <ul className="hidden md:flex space-x-4">
-            {!user ? (
-              <>
-                <li className="text-white text-lg">
-                  <NavLink
-                    to="/signup"
-                    className={({ isActive }) =>
-                      isActive
-                        ? "flex items-center hover:bg-zinc-600 rounded-xl underline"
-                        : "flex items-center hover:bg-zinc-600 rounded-xl"
-                    }
-                  >
-                    <AiOutlineUser className="mr-2" /> Signup
-                  </NavLink>
-                </li>
-                <li className="text-white text-lg">
-                  <NavLink
-                    to="/login"
-                    className={({ isActive }) =>
-                      isActive
-                        ? "flex items-center hover:bg-zinc-600 rounded-xl underline"
-                        : "flex items-center hover:bg-zinc-600 rounded-xl"
-                    }
-                  >
-                    <AiOutlineLogin className="mr-2" /> Login
-                  </NavLink>
-                </li>
-              </>
-            ) : (
-              <>
-                {(user.role === "user" ||
-                  user.role === "admin" ||
-                  user.role === "staff") && (
-                  <>
-                    <li className="text-zinc-700 self-center font-sans">
-                    Welcome  {user.role === "staff" ? "Dr. " : ""}
-                      {user.name}
-                    </li>
-
-                    <li className="text-white self-center">
-                      <NavLink
-                        to="/"
-                        className={({ isActive }) =>
-                          isActive
-                            ? "flex items-center p-1 bg-blue-600 font-bold rounded-xl underline"
-                            : "flex items-center hover:bg-blue-600 rounded-xl"
-                        }
-                      >
-                        <AiOutlineHome className="mr-1 " /> Home
-                      </NavLink>
-                    </li>
-                    <li className="text-white self-center">
-                      <NavLink
-                        to="/posts"
-                        className={({ isActive }) =>
-                          isActive
-                            ? "flex items-center p-1 bg-blue-600 font-bold rounded-xl underline"
-                            : "flex items-center hover:bg-blue-600 rounded-xl"
-                        }
-                      >
-                        <AiOutlineFileText className="mr-1" /> My Posts
-                      </NavLink>
-                    </li>
-                    <li className="text-white self-center">
-                      <NavLink
-                        to="/myvideo"
-                        className={({ isActive }) =>
-                          isActive
-                            ? "flex items-center p-1 bg-blue-600 font-bold rounded-xl underline"
-                            : "flex items-center hover:bg-blue-600 rounded-xl"
-                        }
-                      >
-                        <MdOutlineOndemandVideo className="mr-1" /> My Videos
-                      </NavLink>
-                    </li>
-                    <li className="text-white self-center">
-                      <NavLink
-                        to="/videoposts"
-                        className={({ isActive }) =>
-                          isActive
-                            ? "flex items-center p-1 bg-blue-600 font-bold rounded-xl underline"
-                            : "flex items-center hover:bg-blue-600 rounded-xl"
-                        }
-                      >
-                        <MdOutlineVideoLibrary className="mr-1" /> Videos
-                      </NavLink>
-                    </li>
-                    <li className="text-white self-center">
-                      <NavLink
-                        to="/addwork"
-                        className={({ isActive }) =>
-                          isActive
-                            ? "flex items-center p-1 bg-blue-600 font-bold rounded-xl underline"
-                            : "flex items-center hover:bg-blue-600 rounded-xl"
-                        }
-                      >
-                        <MdWorkspacePremium className="mr-1" /> Add Work
-                      </NavLink>
-                    </li>
-                  </>
-                )}
-                {(user.role === "admin" || user.role === "staff") && (
-                  <>
-                    <li className="text-white self-center">
-                      <NavLink
-                        to="/users"
-                        className={({ isActive }) =>
-                          isActive
-                            ? "flex items-center p-1 bg-blue-600 font-boldrounded-xl underline"
-                            : "flex items-center hover:bg-blue-600 rounded-xl"
-                        }
-                      >
-                        <HiOutlineUsers className="mr-1" />
-                        Users
-                      </NavLink>
-                    </li>
-                    {/* <li className="text-white self-center">
-                      <NavLink
-                        to="/services"
-                          className={({ isActive }) =>
-              isActive  ? "flex items-center p-1 bg-zinc-600 rounded-xl underline" : "flex items-center hover:bg-zinc-600 rounded-xl"
-            }
-                      >
-                        <MdOutlineCleaningServices className="mr-1" />
-                        Services
-                      </NavLink>
-                    </li> */}
-                  </>
-                )}
-                <li className="text-white self-center">
-                  <NavLink
-                    to="/ai"
-                    className={({ isActive }) =>
-                      isActive
-                        ? "flex items-center p-1 bg-blue-600 font-bold rounded-xl underline"
-                        : "flex items-center hover:bg-blue-600 rounded-xl"
-                    }
-                  >
-                    <BsChatSquareDots className="mr-1" /> AI Chat
-                  </NavLink>
-                </li>
-              </>
-            )}
-          </ul>
         </div>
-        {dropdownOpen && (
-          <div className="md:hidden">
-            <div className="w-28 absolute mt-2 rounded-md shadow-lg bg-white right-0 border-2 border-blue-500">
-              <ul className="flex flex-col space-y-2 mt-2 flex-wrap">
-                {!user ? (
-                  <>
-                    <li className="text-lg">
-                      <NavLink
-                        to="/signup"
-                        className={({ isActive }) =>
-                          isActive
-                            ? "flex items-center hover:bg-zinc-600 rounded-xl underline"
-                            : "flex items-center hover:bg-zinc-600 rounded-xl"
-                        }
-                        onClick={closeDropdown}
-                      >
-                        <AiOutlineUser /> Signup
-                      </NavLink>
-                    </li>
-                    <li className="text-lg">
-                      <NavLink
-                        to="/login"
-                        className={({ isActive }) =>
-                          isActive
-                            ? "flex items-center hover:bg-zinc-600 rounded-xl underline"
-                            : "flex items-center hover:bg-zinc-600 rounded-xl"
-                        }
-                        onClick={closeDropdown}
-                      >
-                        <AiOutlineLogin /> Login
-                      </NavLink>
-                    </li>
-                  </>
-                ) : (
-                  <>
-                    {(user.role === "user" ||
-                      user.role === "admin" ||
-                      user.role === "staff") && (
-                      <>
-                        <li className="text-lg">
-                          <NavLink
-                            to="/"
-                            className={({ isActive }) =>
-                              isActive
-                                ? "flex items-center hover:bg-zinc-600 rounded-xl underline"
-                                : "flex items-center hover:bg-zinc-600 rounded-xl"
-                            }
-                            onClick={closeDropdown}
-                          >
-                            <AiOutlineHome /> Home
-                          </NavLink>
-                        </li>
-                        <li className="text-lg">
-                          <NavLink
-                            to="/posts"
-                            className={({ isActive }) =>
-                              isActive
-                                ? "flex items-center hover:bg-zinc-600 rounded-xl underline"
-                                : "flex items-center hover:bg-zinc-600 rounded-xl"
-                            }
-                            onClick={closeDropdown}
-                          >
-                            <AiOutlineFileText /> My Posts
-                          </NavLink>
-                        </li>
-                        <li className="text-lg">
-                          <NavLink
-                            to="/myvideo"
-                            className={({ isActive }) =>
-                              isActive
-                                ? "flex items-center hover:bg-zinc-600 rounded-xl underline"
-                                : "flex items-center hover:bg-zinc-600 rounded-xl"
-                            }
-                            onClick={closeDropdown}
-                          >
-                            <MdOutlineOndemandVideo /> My Videos
-                          </NavLink>
-                        </li>
-                        <li className="text-lg">
-                          <NavLink
-                            to="/videoposts"
-                            className={({ isActive }) =>
-                              isActive
-                                ? "flex items-center bg-zinc-300 p-2 rounded-xl underline"
-                                : "flex items-center hover:bg-zinc-600 rounded-xl"
-                            }
-                            onClick={closeDropdown}
-                          >
-                            <MdOutlineVideoLibrary /> Videos
-                          </NavLink>
-                        </li>
-                        <li className="text-lg">
-                          <NavLink
-                            to="/addwork"
-                            className={({ isActive }) =>
-                              isActive
-                                ? "flex items-center hover:bg-zinc-600 rounded-xl underline"
-                                : "flex items-center hover:bg-zinc-600 rounded-xl"
-                            }
-                            onClick={closeDropdown}
-                          >
-                            <MdWorkspacePremium /> Add Work
-                          </NavLink>
-                        </li>
-                      </>
-                    )}
-                    {(user.role === "admin" || user.role === "staff") && (
-                      <>
-                        <li className="text-lg">
-                          <NavLink
-                            to="/users"
-                            className={({ isActive }) =>
-                              isActive
-                                ? "flex items-center hover:bg-zinc-600 rounded-xl underline"
-                                : "flex items-center hover:bg-zinc-600 rounded-xl"
-                            }
-                            onClick={closeDropdown}
-                          >
-                            <HiOutlineUsers /> Users
-                          </NavLink>
-                        </li>
-                        {/* <li className="text-lg">
-                          <NavLink
-                            to="/services"
-                              className={({ isActive }) =>
-              isActive ? "flex items-center hover:bg-zinc-600 rounded-xl underline" : "flex items-center hover:bg-zinc-600 rounded-xl"
-            }
-                            onClick={closeDropdown}
-                          >
-                            <MdOutlineCleaningServices /> Services
-                          </NavLink>
-                        </li> */}
-                      </>
-                    )}
-                    <li className="text-lg">
-                      <NavLink
-                        to="/addwork"
-                        className={({ isActive }) =>
-                          isActive
-                            ? "flex items-center hover:bg-zinc-600 rounded-xl underline"
-                            : "flex items-center hover:bg-zinc-600 rounded-xl"
-                        }
-                        onClick={closeDropdown}
-                      >
-                        <BsChatSquareDots /> AI Chat
-                      </NavLink>
-                    </li>
-                  </>
-                )}
-              </ul>
-            </div>
+
+        {/* Center Section */}
+        <div className="hidden md:flex space-x-4">
+          {!user ? (
+            <>
+              <li className="list-none  text-lg">
+                <NavLink
+                  to="/signup"
+                  className={({ isActive }) =>
+                    isActive
+                      ? "flex items-center hover:bg-zinc-600 rounded-xl underline"
+                      : "flex items-center hover:bg-zinc-600 rounded-xl"
+                  }
+                >
+                  <AiOutlineUser className="mr-2" /> Signup
+                </NavLink>
+              </li>
+              <li className="list-none  text-lg">
+                <NavLink
+                  to="/login"
+                  className={({ isActive }) =>
+                    isActive
+                      ? "flex items-center hover:bg-zinc-600 rounded-xl underline"
+                      : "flex items-center hover:bg-zinc-600 rounded-xl"
+                  }
+                >
+                  <AiOutlineLogin className="mr-2" /> Login
+                </NavLink>
+              </li>
+            </>
+          ) : (
+            <>
+              {(user.role === "user" ||
+                user.role === "admin" ||
+                user.role === "staff" ||
+                user.role === "doctor") && (
+                <>
+                  <li className="list-none text-zinc-700 dark:text-gray-200 self-center font-sans">
+                    Welcome {user.role === "doctor" ? "Dr. " : ""}
+                    {user.name}
+                  </li>
+                  <li className="list-none  self-center">
+                    <NavLink
+                      to="/"
+                      className={({ isActive }) =>
+                        isActive
+                          ? "flex items-center p-1 font-bold rounded-xl underline"
+                          : "flex items-center rounded-xl"
+                      }
+                    >
+                      <AiOutlineHome className="mr-1" /> Home
+                    </NavLink>
+                  </li>
+                  <li className="list-none self-center">
+                    <NavLink
+                      to="/posts"
+                      className={({ isActive }) =>
+                        isActive
+                          ? "flex items-center p-1 font-bold rounded-xl underline"
+                          : "flex items-center rounded-xl"
+                      }
+                    >
+                      <AiOutlineFileText className="mr-1" /> My Posts
+                    </NavLink>
+                  </li>
+                  <li className="list-none  self-center">
+                    <NavLink
+                      to="/myvideo"
+                      className={({ isActive }) =>
+                        isActive
+                          ? "flex items-center p-1 font-bold rounded-xl underline"
+                          : "flex items-center rounded-xl"
+                      }
+                    >
+                      <MdOutlineOndemandVideo className="mr-1" /> My Videos
+                    </NavLink>
+                  </li>
+                  <li className="list-none  self-center">
+                    <NavLink
+                      to="/videoposts"
+                      className={({ isActive }) =>
+                        isActive
+                          ? "flex items-center p-1 font-bold rounded-xl underline"
+                          : "flex items-center rounded-xl"
+                      }
+                    >
+                      <MdOutlineVideoLibrary className="mr-1" /> Videos
+                    </NavLink>
+                  </li>
+                  <li className="list-none  self-center">
+                    <NavLink
+                      to="/addwork"
+                      className={({ isActive }) =>
+                        isActive
+                          ? "flex items-center p-1 font-bold rounded-xl underline"
+                          : "flex items-center rounded-xl"
+                      }
+                    >
+                      <MdWorkspacePremium className="mr-1" /> Add Work
+                    </NavLink>
+                  </li>
+                </>
+              )}
+              {(user.role === "admin" || user.role === "staff") && (
+                <>
+                  <li className="list-none  self-center">
+                    <NavLink
+                      to="/users"
+                      className={({ isActive }) =>
+                        isActive
+                          ? "flex items-center p-1 font-bold rounded-xl underline"
+                          : "flex items-center rounded-xl"
+                      }
+                    >
+                      <HiOutlineUsers className="mr-1" /> Users
+                    </NavLink>
+                  </li>
+                </>
+              )}
+              <li className="list-none  self-center">
+                <NavLink
+                  to="/ai"
+                  className={({ isActive }) =>
+                    isActive
+                      ? "flex items-center p-1 font-bold rounded-xl underline"
+                      : "flex items-center rounded-xl"
+                  }
+                >
+                  <BsChatSquareDots className="mr-1" /> AI Chat
+                </NavLink>
+              </li>
+            </>
+          )}
+        </div>
+
+        {/* Right Section: Dark Mode Toggle & Mobile Menu Button */}
+        <div className="flex items-center">
+          <button
+            className=" p-2 bg-gray-200 dark:bg-gray-700 rounded-full"
+            onClick={() => setDarkMode(!darkMode)}
+          >
+            {darkMode ? "🌙" : "☀️"}
+          </button>
+          <button className="md:hidden text-black mr-2" onClick={toggleDropdown}>
+            <div className="w-8 h-1 bg-black dark:bg-white m-1 rounded-lg"></div>
+            <div className="w-6 h-1 bg-black dark:bg-white ml-3 rounded-lg"></div>
+          </button>
+        </div>
+      </div>
+
+      {/* Mobile Dropdown Menu */}
+      {dropdownOpen && (
+        <div className="md:hidden">
+          <div className="w-32 bg-white dark:bg-gray-900  absolute mt-2 rounded-md shadow-lg text-black dark:text-white right-0 border-2 border-blue-500">
+            <ul className="flex flex-col space-y-2 mt-2 flex-wrap">
+              {!user ? (
+                <>
+                  <li className="p-2">
+                    <NavLink
+                      to="/signup"
+                      onClick={closeDropdown}
+                      className={({ isActive }) =>
+                        isActive
+                          ? "flex items-center hover:bg-zinc-600 rounded-xl underline"
+                          : "flex items-center hover:bg-zinc-600 rounded-xl"
+                      }
+                    >
+                      <AiOutlineUser className="m-1" /> Signup
+                    </NavLink>
+                  </li>
+                  <li className="p-2">
+                    <NavLink
+                      to="/login"
+                      onClick={closeDropdown}
+                      className={({ isActive }) =>
+                        isActive
+                          ? "flex items-center hover:bg-zinc-600 rounded-xl underline"
+                          : "flex items-center hover:bg-zinc-600 rounded-xl"
+                      }
+                    >
+                      <AiOutlineLogin /> Login
+                    </NavLink>
+                  </li>
+                </>
+              ) : (
+                <>
+                  {(user.role === "user" ||
+                    user.role === "admin" ||
+                    user.role === "doctor" ||
+                    user.role === "staff") && (
+                    <>
+                      <li className="p-2">
+                        <NavLink
+                          to="/"
+                          onClick={closeDropdown}
+                          className={({ isActive }) =>
+                            isActive
+                              ? "flex items-center hover:bg-zinc-600 rounded-xl underline"
+                              : "flex items-center hover:bg-zinc-600 rounded-xl"
+                          }
+                        >
+                          <AiOutlineHome className="m-1" /> Home
+                        </NavLink>
+                      </li>
+                      <li className="p-2">
+                        <NavLink
+                          to="/posts"
+                          onClick={closeDropdown}
+                          className={({ isActive }) =>
+                            isActive
+                              ? "flex items-center hover:bg-zinc-600 rounded-xl underline"
+                              : "flex items-center hover:bg-zinc-600 rounded-xl"
+                          }
+                        >
+                          <AiOutlineFileText className="m-1" /> My Posts
+                        </NavLink>
+                      </li>
+                      <li className="p-2">
+                        <NavLink
+                          to="/myvideo"
+                          onClick={closeDropdown}
+                          className={({ isActive }) =>
+                            isActive
+                              ? "flex items-center hover:bg-zinc-600 rounded-xl underline"
+                              : "flex items-center hover:bg-zinc-600 rounded-xl"
+                          }
+                        >
+                          <MdOutlineOndemandVideo className="m-1" /> My Videos
+                        </NavLink>
+                      </li>
+                      <li className="p-2">
+                        <NavLink
+                          to="/videoposts"
+                          onClick={closeDropdown}
+                          className={({ isActive }) =>
+                            isActive
+                              ? "flex items-center bg-zinc-300 p-2 rounded-xl underline"
+                              : "flex items-center hover:bg-zinc-600 rounded-xl"
+                          }
+                        >
+                          <MdOutlineVideoLibrary className="m-1" /> Videos
+                        </NavLink>
+                      </li>
+                      <li className="p-2">
+                        <NavLink
+                          to="/addwork"
+                          onClick={closeDropdown}
+                          className={({ isActive }) =>
+                            isActive
+                              ? "flex items-center hover:bg-zinc-600 rounded-xl underline"
+                              : "flex items-center hover:bg-zinc-600 rounded-xl"
+                          }
+                        >
+                          <MdWorkspacePremium className="m-1" /> Add Work
+                        </NavLink>
+                      </li>
+                    </>
+                  )}
+                  {(user.role === "admin" || user.role === "staff") && (
+                    <>
+                      <li className="p-2">
+                        <NavLink
+                          to="/users"
+                          onClick={closeDropdown}
+                          className={({ isActive }) =>
+                            isActive
+                              ? "flex items-center hover:bg-zinc-600 rounded-xl underline"
+                              : "flex items-center hover:bg-zinc-600 rounded-xl"
+                          }
+                        >
+                          <HiOutlineUsers className="m-1" /> Users
+                        </NavLink>
+                      </li>
+                    </>
+                  )}
+                  <li className="p-2">
+                    <NavLink
+                      to="/ai"
+                      onClick={closeDropdown}
+                      className={({ isActive }) =>
+                        isActive
+                          ? "flex items-center hover:bg-zinc-600 rounded-xl underline"
+                          : "flex items-center hover:bg-zinc-600 rounded-xl"
+                      }
+                    >
+                      <BsChatSquareDots className="m-1" /> AI Chat
+                    </NavLink>
+                  </li>
+                </>
+              )}
+            </ul>
           </div>
-        )}
-      </nav>
-    </>
+        </div>
+      )}
+    </nav>
   );
 };
 

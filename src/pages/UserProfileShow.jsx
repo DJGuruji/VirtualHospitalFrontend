@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "../axios";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 import { useParams, Link } from "react-router-dom";
 import { useAuthStore } from "../store/authStore";
 import { getPosts } from "../services/PostService";
@@ -20,6 +20,7 @@ const UserProfileShow = () => {
   const [photo, setPhoto] = useState(null);
   const [state, setState] = useState("");
   const [job, setJob] = useState("");
+  const [role, setRole] = useState("");
   const [district, setDistrict] = useState("");
   const [office, setOffice] = useState("");
   const [officePlace, setOfficePlace] = useState("");
@@ -46,6 +47,7 @@ const UserProfileShow = () => {
         setName(userData.name);
         setEmail(userData.email);
         setMobile(userData.mobile || "");
+        setRole(userData.role);
         setState(userData.state || "");
         setJob(userData.job || "");
         setDistrict(userData.district || "");
@@ -157,7 +159,6 @@ const UserProfileShow = () => {
     }
   };
 
-
   if (loadingPosts) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -172,14 +173,14 @@ const UserProfileShow = () => {
   }
 
   return (
-    <div className="flex justify-center items-center">
-      <div className="md:w-3/4 lg:w-3/4 xl:w-3/4 mx-auto p-6 bg-white rounded-lg ">
+    <div className="flex justify-center items-center dark:bg-slate-900 min-h-screen">
+      <div className="md:w-3/4 dark:bg-slate-800 mx-auto p-6 bg-white rounded-lg ">
         <div className="text-center">
           {photo && (
             <>
               ({" "}
               <img
-                src={config.API_URL + `${photo}`}
+                src={photo}
                 alt="Profile"
                 className="mx-auto w-24 h-24 rounded-full object-cover mb-4 cursor-pointer"
                 onClick={openModal}
@@ -192,7 +193,7 @@ const UserProfileShow = () => {
                 onRequestClose={closeModal}
                 shouldCloseOnOverlayClick={true}
                 contentLabel="Enlarged Photo"
-                className="flex justify-center items-center bg-white rounded-full md:w-1/2 lg:w-1/2 xl:w-1/2 md:h-1/2 lg:h-1/2 xl:h-1/2"
+                className="flex justify-center items-center bg-white dark:bg-slate-800 rounded-full md:w-1/2 lg:w-1/2 xl:w-1/2 md:h-1/2 lg:h-1/2 xl:h-1/2"
                 overlayClassName="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center"
               >
                 <div className="relative flex justify-center">
@@ -205,18 +206,21 @@ const UserProfileShow = () => {
               </Modal>
             </>
           )}
-          <h2 className="text-3xl font-semibold mb-2 ">{name}</h2>
-          <p className="text-gray-600 ">{job}</p>
+          <h2 className="text-3xl font-semibold mb-2 dark:text-white">
+            {user.role === "doctor" ? `Dr. ${name}` : name}
+          </h2>
+
+          <p className="text-gray-600  dark:text-gray-300">{job}</p>
           <div className="flex justify-center p-3">
             <Link
               to={`/following/${userId}`}
-              className="cursor-pointer text-blue-500"
+              className="cursor-pointer text-blue-500 dark:text-blue-300"
             >
               {followingCount} Following
             </Link>
             <Link
               to={`/followers/${userId}`}
-              className="ml-5 cursor-pointer text-blue-500"
+              className="ml-5 cursor-pointer text-blue-500 dark:text-blue-300"
             >
               {followersCount} Followers
             </Link>
@@ -242,31 +246,31 @@ const UserProfileShow = () => {
         {/* grid grid-cols-1 md:grid-cols-2 gap-4 */}
         <div className=" md:flex lg:flex xl:flex  justify-center ">
           <div className="m-2">
-            <h3 className="text-lg font-semibold text-gray-700">Contact</h3>
-            <p className="text-gray-600 mt-5">
+            <h3 className="text-lg font-semibold text-gray-700 dark:text-white">Contact</h3>
+            <p className="text-gray-600 mt-5 dark:text-gray-200">
               <strong>Email:</strong> {email}
             </p>
             {mobile && (
-              <p className="text-gray-600 mt-2">
+              <p className="text-gray-600 mt-2 dark:text-gray-200">
                 <strong>Mobile:</strong> {mobile}
               </p>
             )}
           </div>
           <div className="m-2">
-            <h3 className="text-lg font-semibold text-gray-700">Location</h3>
-            <p className="text-gray-600 mt-5">
+            <h3 className="text-lg font-semibold text-gray-700 dark:text-white">Location</h3>
+            <p className="text-gray-600 mt-5 dark:text-gray-200">
               <strong>State:</strong> {state}
             </p>
-            <p className="text-gray-600 mt-2">
+            <p className="text-gray-600 mt-2 dark:text-gray-200">
               <strong>District:</strong> {district}
             </p>
           </div>
           <div className="m-2">
-            <h3 className="text-lg font-semibold text-gray-700">Office</h3>
-            <p className="text-gray-600 mt-5">
+            <h3 className="text-lg font-semibold text-gray-700 dark:text-white">Office</h3>
+            <p className="text-gray-600 mt-5 dark:text-gray-200">
               <strong>Office Name:</strong> {office}
             </p>
-            <p className="text-gray-600 mt-2">
+            <p className="text-gray-600 mt-2 dark:text-gray-200">
               <strong>Office Place:</strong> {officePlace}
             </p>
           </div>
@@ -285,23 +289,31 @@ const UserProfileShow = () => {
               </button>
             </>
           )}
+          {user && role === "doctor" && user.email !== email && (
+            <button className="hover:shadow-xl bg-blue-700 hover:bg-blue-800 text-white py-1 px-2 rounded-md hover:rounded-xl mt-5">
+              <Link to={`/book/${userId}`}>Book an Appointment</Link>
+            </button>
+          )}
+ {user &&
+            user.email !== email &&(
           <button
             onClick={fetchUserPosts}
             className="hover:shadow-xl py-1 px-6 rounded-md hover:rounded-xl mt-5 ml-3 bg-blue-700 hover:bg-blue-800 text-white"
           >
             Posts
           </button>
+            )}
         </div>
         {loadingPosts ? (
-          <p className="text-center mt-4">Loading posts...</p>
+          <p className="text-center mt-4 dark:text-gray-300">Loading posts...</p>
         ) : showPosts && posts.length === 0 ? (
-          <p className="text-center mt-4">No posts found.</p>
+          <p className="text-center mt-4 dark:text-gray-200">No posts found.</p>
         ) : showPosts ? (
           <div className="container mx-auto p-4">
             <div className="space-y-4">
               {posts.map((post) => (
                 <div key={post._id} className="md:p-4 lg:p-4 xl:p-4 rounded-md">
-                  <h4 className="text-xl font-semibold ml-16 p-5">
+                  <h4 className="text-xl font-semibold ml-16 p-5 dark:text-white">
                     {post.postName}
                   </h4>
                   <div className="md:flex lg:flex xl:flex">
@@ -311,7 +323,7 @@ const UserProfileShow = () => {
                       alt={post.postName}
                     />
                     <div className="p-4">
-                      <p className="text-gray-700 mb-2 text-justify">
+                      <p className="text-gray-700 mb-2 text-justify dark:text-gray-200">
                         {showMore[post._id]
                           ? post.postDescription
                           : `${post.postDescription.substring(0, 100)}...`}

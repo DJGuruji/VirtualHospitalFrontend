@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { createPost } from "../services/PostService";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 
 const CreatePost = () => {
   const [formData, setFormData] = useState({
@@ -45,17 +45,17 @@ const CreatePost = () => {
   };
 
   return (
-    <div className="h-screen flex justify-center items-center">
+    <div className="min-h-screen p-10 min-w-lg  flex justify-center items-center dark:bg-slate-900">
       <form
         onSubmit={onSubmit}
-        className="max-w-lg mx-auto p-8 bg-white rounded-lg shadow-lg"
+        className="mx-auto p-8 w-full md:w-3/4 bg-white rounded-lg shadow-lg dark:bg-slate-800 "
       >
-        <h1 className="text-blue-700 font-bold text-xl p-6 text-center">
+        <h1 className="text-blue-700 dark:text-blue-400 font-bold text-xl p-6 text-center">
           Add Your Posts
         </h1>
         <div className="mb-6">
           <label
-            className="block text-gray-700 text-sm font-bold mb-2"
+            className="block dark:text-white text-gray-700 text-sm font-bold mb-2"
             htmlFor="postName"
           >
             Heading
@@ -67,12 +67,12 @@ const CreatePost = () => {
             onChange={onChange}
             required
             placeholder="Post name"
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            className="shadow appearance-none dark:text-white dark:bg-slate-700 border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           />
         </div>
         <div className="mb-6">
           <label
-            className="block text-gray-700 text-sm font-bold mb-2"
+            className="block dark:text-white text-gray-700 text-sm font-bold mb-2"
             htmlFor="postImage"
           >
             Post Image
@@ -82,12 +82,12 @@ const CreatePost = () => {
             name="postImage"
             onChange={onFileChange}
             required
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            className="shadow dark:bg-slate-700 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           />
         </div>
         <div className="mb-6">
           <label
-            className="block text-gray-700 text-sm font-bold mb-2"
+            className="block dark:text-white text-gray-700 text-sm font-bold mb-2"
             htmlFor="postDescription"
           >
             Post Description
@@ -98,7 +98,7 @@ const CreatePost = () => {
             onChange={onChange}
             required
             placeholder="Give description about post"
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            className="shadow dark:text-white dark:bg-slate-700 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           ></textarea>
         </div>
         <button

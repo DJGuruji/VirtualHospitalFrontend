@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "../axios";
-import { toast } from "react-toastify";
-import { Clipboard, Check, Moon, Sun } from "lucide-react";
+import { toast } from "sonner";
+import { Clipboard, Check, } from "lucide-react";
 import { IoMdSend } from "react-icons/io";
 import { FaCaretSquareUp } from "react-icons/fa";
 
@@ -10,40 +10,43 @@ function AIChat() {
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [copiedIndex, setCopiedIndex] = useState(null);
-  const [darkMode, setDarkMode] = useState(false);
   const [height, setHeight] = useState("auto");
 
- const handleSubmit = async (e) => {
-  e.preventDefault();
-  if (!prompt.trim()) return;
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!prompt.trim()) return;
 
-  setMessages((prev) => [...prev, { sender: "You", text: prompt }]);
-  setPrompt("");
-  setLoading(true);
+    setMessages((prev) => [...prev, { sender: "You", text: prompt }]);
+    setPrompt("");
+    setLoading(true);
 
-  const isImageRequest = false; // Change this logic as needed based on the user's request for images
+    const isImageRequest = false; // Change this logic as needed based on the user's request for images
 
-  try {
-    const result = await axios.post("/users/generate-response", { prompt, isImageRequest });
-    if (isImageRequest) {
-      setMessages((prev) => [
-        ...prev,
-        { sender: "AI", text: `Image: ${result.data.imageUrl}` },
-      ]);
-    } else {
-      setMessages((prev) => [
-        ...prev,
-        { sender: "AI", text: result.data.message },
-      ]);
+    try {
+      const result = await axios.post("/users/generate-response", {
+        prompt,
+        isImageRequest,
+      });
+      if (isImageRequest) {
+        setMessages((prev) => [
+          ...prev,
+          { sender: "AI", text: `Image: ${result.data.imageUrl}` },
+        ]);
+      } else {
+        setMessages((prev) => [
+          ...prev,
+          { sender: "AI", text: result.data.message },
+        ]);
+      }
+    } catch (error) {
+      console.error("API Error:", error);
+      toast.error(
+        error.response?.data?.error || "An unexpected error occurred."
+      );
+    } finally {
+      setLoading(false);
     }
-  } catch (error) {
-    console.error("API Error:", error);
-    toast.error(error.response?.data?.error || "An unexpected error occurred.");
-  } finally {
-    setLoading(false);
-  }
-};
-
+  };
 
   const handleChange = (e) => {
     setPrompt(e.target.value);
@@ -64,41 +67,26 @@ function AIChat() {
 
   return (
     <div
-      className={`md:flex flex-col items-center justify-center min-h-screen ${
-        darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-900"
+      className={`md:flex flex-col items-center justify-center min-h-screen dark:bg-gray-900 dark:text-white bg-gray-100 text-gray-900"
       } `}
     >
       <div
-        className={`p-6 h-screen md:h-auto lg:h-auto xl:h-auto border rounded-lg shadow-md w-full max-w-xl md:max-w-3/4 lg:max-w-3/4 xl:max-w-3/4 ${
-          darkMode ? "bg-gray-800" : "bg-white"
+        className={`p-6 h-screen md:h-auto lg:h-auto xl:h-auto border rounded-lg shadow-md w-full max-w-xl md:max-w-3/4 lg:max-w-3/4 xl:max-w-3/4 
+          dark:bg-gray-800"
         }`}
       >
         <div className="flex justify-between">
-         <span className="">
-         <h1 className="text-2xl font-semibold mb-2 text-blue-500 ">
-            FMC AI Chat
-          </h1>
-          <h5 className="text-sm text-blue-300 ">With Google Gemini</h5>
-         </span>
-          <button
-            onClick={() => setDarkMode(!darkMode)}
-            className={`flex items-center gap-2 px-3 py-1 rounded-md transition 
-${darkMode ? "bg-gray-700 hover:bg-gray-600" : "bg-white hover:bg-gray-200"}`}
-          >
-            {darkMode ? (
-              <Sun className="w-5 h-5 text-yellow-200" />
-            ) : (
-              <Moon className="w-5 h-5 text-gray-800" />
-            )}
+          <span className="">
+            <h1 className="text-2xl font-semibold mb-2 text-blue-500 ">
+               AI Chat
+            </h1>
+            <h5 className="text-sm text-blue-300 ">With Google Gemini</h5>
+          </span>
         
-          </button>
         </div>
 
         <div
-          className={`h-96 overflow-y-auto border p-3 rounded-md mt-4 ${
-            darkMode
-              ? "bg-gray-700 border-gray-600 "
-              : "bg-gray-50 border-gray-300 "
+          className={`h-96 overflow-y-auto border p-3 rounded-md mt-4  dark:bg-gray-700 dark:border-gray-600 bg-gray-50 border-gray-300 "
           }`}
         >
           {messages.map((msg, index) => (
@@ -132,8 +120,8 @@ ${darkMode ? "bg-gray-700 hover:bg-gray-600" : "bg-white hover:bg-gray-200"}`}
             </div>
           ))}
           {loading && (
-            <div className="animate-pulse p-2 my-2 rounded-md bg-gray-200 text-gray-800 max-w-xs">
-             ...
+            <div className="animate-pulse p-2 my-2 rounded-md bg-gray-200 dark:bg-slate-700 text-gray-800 max-w-xs">
+              ...
             </div>
           )}
         </div>
@@ -143,19 +131,13 @@ ${darkMode ? "bg-gray-700 hover:bg-gray-600" : "bg-white hover:bg-gray-200"}`}
             value={prompt}
             onChange={handleChange}
             placeholder="Type a message..."
-            className={`w-full p-3 pr-14 border rounded-md focus:outline-none focus:ring-2 ${
-              darkMode
-                ? "border-gray-600 bg-gray-700 text-white focus:ring-blue-400"
-                : "border-gray-300 focus:ring-blue-500"
+            className={`w-full p-3 pr-14 border rounded-md focus:outline-none focus:ring-2 "bark:order-gray-600 dark:bg-gray-700 text-white focus:ring-blue-400 border-gray-300 focus:ring-blue-500"
             }`}
             style={{ height }}
           />
           <button
             type="submit"
-            className={`absolute right-3 bottom-2 p-3 rounded-full transition ${
-              darkMode
-                ? "bg-blue-600 hover:bg-blue-700 text-white"
-                : "bg-blue-500 hover:bg-blue-600 text-white"
+            className={`absolute right-3 bottom-2 p-3 rounded-full transition dark:bg-blue-600 dark:hover:bg-blue-700 dark:text-white bg-blue-500 hover:bg-blue-600 text-white"
             }`}
             disabled={loading}
           >

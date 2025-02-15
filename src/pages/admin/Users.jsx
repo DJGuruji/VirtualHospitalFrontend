@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "../../axios";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 import { Link } from "react-router-dom";
 import { useAuthStore } from "../../store/authStore";
 
@@ -104,10 +104,9 @@ const Users = () => {
     }
   };
 
-
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-screen">
+      <div className="flex justify-center items-center min-h-screen">
         <div
           className="w-8 h-8 border-4 border-blue-800 border-t-transparent rounded-full animate-spin"
           role="status"
@@ -117,21 +116,21 @@ const Users = () => {
       </div>
     );
   }
-  
+
   const isAdmin = user && user.role === "admin";
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-center text-zinc-800 mb-4 text-xl">All Users </h1>
+    <div className="dark:bg-slate-900 min-h-screen">
+      <h1 className="text-center text-zinc-800 dark:text-white mb-4 text-xl">All Users </h1>
 
       <div className="mb-4">
-        <label className="text-xl text-zinc-500 ">Filter </label>
+        <label className="text-xl text-zinc-500 dark:text-white ">Filter </label>
         <input
           type="text"
           value={searchQuery}
           onChange={handleSearchChange}
           placeholder="Search by name or email or role..."
-          className="md:w-1/4 lg:w-1/4 xl:w-1/4 w-full  border-2 border-blue-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          className="md:w-1/4 dark:text-white lg:w-1/4 xl:w-1/4 w-full dark:bg-slate-800  border-2 border-blue-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
         />
       </div>
 
@@ -139,7 +138,7 @@ const Users = () => {
         <p className="text-center">Loading...</p>
       ) : (
         <div className="overflow-x-auto">
-          <table className="min-w-full bg-white">
+          <table className="min-w-full bg-white dark:bg-slate-800 dark:text-white">
             <thead>
               <tr>
                 <th className="px-4 py-2">Name</th>
@@ -151,13 +150,12 @@ const Users = () => {
                 <th className="px-4 py-2">District</th>
                 <th className="px-4 py-2">Office</th>
                 <th className="px-4 py-2">Address</th>
-                {isAdmin && 
-                <>
-              
-                <th className="px-4 py-2">Actions</th>
-                <th className="px-4 py-2">Promote Role To</th>
-                </>
-                }
+                {isAdmin && (
+                  <>
+                    <th className="px-4 py-2">Actions</th>
+                    <th className="px-4 py-2">Promote Role To</th>
+                  </>
+                )}
               </tr>
             </thead>
             <tbody>
@@ -166,9 +164,9 @@ const Users = () => {
                   <td className="px-4 py-2">
                     <Link
                       to={`/profile/${user._id}`}
-                      className="text-blue-600 hover:underline"
+                      className="text-blue-600 dark:text-blue-300 hover:underline"
                     >
-                      {user.name}
+                      {user.role === "doctor" ? `Dr. ${user.name}` : user.name}
                     </Link>
                   </td>
                   <td className="px-4 py-2">{user.role}</td>
@@ -179,37 +177,51 @@ const Users = () => {
                   <td className="px-4 py-2">{user.district}</td>
                   <td className="px-4 py-2">{user.office}</td>
                   <td className="px-4 py-2">{user.officePlace}</td>
-                  {isAdmin && ( 
+                  {isAdmin && (
                     <>
-                    <td className="px-4 py-2">
-                    <button
-                      onClick={() => deleteUser(user._id)}
-                      className="border-2 border-red-800 bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-md hover:rounded-xl"
-                    >
-                      Delete
-                    </button>
-                  </td>
-                 
-                    <td className="px-4 py-2 flex flex-col ">
-                      <button
-                        onClick={() => promoteUser(user._id, "admin")}
-                        className="border-2 border-green-600 bg-green-500 hover:bg-green-600 text-white  px-3 py-1 m-1 rounded-md hover:rounded-xl"
-                      >
-                        Admin
-                      </button>
-                      <button
-                        onClick={() => promoteUser(user._id, "staff")}
-                        className="border-2 border-blue-700 bg-blue-600 hover:bg-blue-700 text-white px-4 py-1 rounded-md m-1 hover:rounded-xl"
-                      >
-                        Staff
-                      </button>
-                      <button
-                        onClick={() => promoteUser(user._id, "user")}
-                        className="border-2 border-yellow-500 bg-yellow-400 hover:bg-yellow-500 text-white px-4 py-1 rounded-md m-1 hover:rounded-xl"
-                      >
-                        User
-                      </button>
-                    </td>
+                      <td className="px-4 py-2">
+                        <button
+                          onClick={() => deleteUser(user._id)}
+                          className="border-2 border-red-800 bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-md hover:rounded-xl"
+                        >
+                          Delete
+                        </button>
+                      </td>
+
+                      <td className="px-4 py-2 flex flex-col ">
+                        {user.role != "admin" && (
+                          <button
+                            onClick={() => promoteUser(user._id, "admin")}
+                            className="border-2 border-green-600 bg-green-500 hover:bg-green-600 text-white  px-3 py-1 m-1 rounded-md hover:rounded-xl"
+                          >
+                            Admin
+                          </button>
+                        )}
+                        {user.role != "staff" && (
+                          <button
+                            onClick={() => promoteUser(user._id, "staff")}
+                            className="border-2 border-blue-700 bg-blue-600 hover:bg-blue-700 text-white px-4 py-1 rounded-md m-1 hover:rounded-xl"
+                          >
+                            staff
+                          </button>
+                        )}
+                        {user.role != "user" && (
+                          <button
+                            onClick={() => promoteUser(user._id, "user")}
+                            className="border-2 border-yellow-500 bg-yellow-400 hover:bg-yellow-500 text-white px-4 py-1 rounded-md m-1 hover:rounded-xl"
+                          >
+                            User
+                          </button>
+                        )}
+                        {user.role != "block" && (
+                          <button
+                            onClick={() => promoteUser(user._id, "block")}
+                            className="border-2 border-black bg-black hover:bg-gray-900 text-white px-4 py-1 rounded-md m-1 hover:rounded-xl"
+                          >
+                            Block
+                          </button>
+                        )}
+                      </td>
                     </>
                   )}
                 </tr>

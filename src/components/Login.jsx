@@ -4,7 +4,7 @@ import { AiOutlineMail, AiOutlineLock } from 'react-icons/ai';
 import axios from '../axios';
 import { useAuthStore } from '../store/authStore';
 import { Link } from 'react-router-dom';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -37,35 +37,35 @@ const Login = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <form onSubmit={onSubmit} className="bg-white p-6 rounded-lg shadow-md w-full max-w-sm">
-        <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
+    <div className="flex dark:bg-slate-900 items-center justify-center min-h-screen bg-gray-100">
+      <form onSubmit={onSubmit} className="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-md w-full max-w-sm">
+        <h2 className="text-2xl font-bold mb-6 text-center dark:text-white ">Login</h2>
         <div className="mb-4">
-          <label className="block text-gray-700 mb-2" htmlFor="identifier">Email or Username</label>
-          <div className="flex items-center border border-gray-300 rounded-md px-3 py-2">
-            <AiOutlineMail className="text-gray-600 mr-2" />
+          <label className="block text-gray-700 mb-2 dark:text-white" htmlFor="identifier">Email or Username</label>
+          <div className="flex items-center border border-gray-300 dark:bg-slate-700 rounded-md px-3 py-2">
+            <AiOutlineMail className="text-gray-600 mr-2 dark:text-white" />
             <input
               type="text"
               name="identifier"
               value={identifier}
               onChange={onChange}
               required
-              className="w-full outline-none"
+              className="w-full outline-none dark:text-white dark:bg-slate-700"
               placeholder="Enter your email or username"
             />
           </div>
         </div>
         <div className="mb-4">
-          <label className="block text-gray-700 mb-2" htmlFor="password">Password</label>
-          <div className="flex items-center border border-gray-300 rounded-md px-3 py-2">
-            <AiOutlineLock className="text-gray-600 mr-2" />
+          <label className="block text-gray-700 mb-2 dark:text-white " htmlFor="password">Password</label>
+          <div className="flex items-center border border-gray-300 dark:bg-slate-700 rounded-md px-3 py-2">
+            <AiOutlineLock className="text-gray-600 dark:text-white mr-2" />
             <input
               type="password"
               name="password"
               value={password}
               onChange={onChange}
               required
-              className="w-full outline-none"
+              className="w-full outline-none dark:text-white dark:bg-slate-700"
               placeholder="Enter your password"
             />
           </div>
@@ -76,7 +76,7 @@ const Login = () => {
         <p className="pt-5">
           <Link to="/forgotpass" className='text-blue-600 hover:text-blue-400 underline '>Forgot Password ?</Link>
         </p>
-        <p className="ml-7 lg:ml-9 xl:ml-9 mt-5 ">
+        <p className="ml-7 lg:ml-9 xl:ml-9 mt-5 dark:text-white ">
           Not registered yet?{" "}
           <a
             onClick={() => navigate("/signup")}

@@ -28,6 +28,13 @@ import DeleteAcc from "./components/DeleteAcc";
 import Followers from "./components/Followers";
 import Following from "./components/Following";
 import PasswordChange from "./components/PasswordReset";
+import ApplyDoctor from "./pages/doctor/ApplyDoctor";
+import DoctorApprove from "./pages/admin/DoctorApprove";
+import AppointmentBooking from "./pages/appointment/AppointmentBooking";
+import AppointmentHistory from "./pages/appointment/AppointmentHistory";
+import Appointments from "./pages/appointment/Appointments"
+import AllAppointments from "./pages/appointment/AllAppointments"
+
 
 const App = () => {
   const { user } = useAuthStore();
@@ -61,6 +68,7 @@ const App = () => {
         <Route path="/createpost" element={user ? <CreatePost /> : <Login />} />
         <Route path="/deleteacc" element={user ? <DeleteAcc /> : <Login />} />
         <Route path="/ai" element={user ? <AIChat /> : <Login />} />
+        <Route path="/applydoc" element={user ? <ApplyDoctor /> : <Login />} />
         <Route
           path="/createvideopost"
           element={user ? <CreateVideoPost /> : <Login />}
@@ -73,10 +81,27 @@ const App = () => {
           path="/profile/:userId"
           element={user ? <UserProfileShow /> : <Login />}
         />
+         <Route
+          path="/book/:docId"
+          element={user ? <AppointmentBooking /> : <Login />}
+        />
+         <Route
+          path="/history"
+          element={user ? <AppointmentHistory /> : <Login />}
+        />
+         <Route
+          path="/appointments"
+          element={user ? <Appointments /> : <Login />}
+        />
+         <Route
+          path="/allappointments"
+          element={user ? <AllAppointments /> : <Login />}
+        />
 
         {user && (user.role === "admin" || user.role === "staff") && (
           <>
             <Route path="/services" element={user ? <Services /> : <Login />} />
+            <Route path="/docapprove" element={user ? <DoctorApprove /> : <Login />} />
             <Route path="/admin" element={user ? <Admin /> : <Login />} />
             <Route path="/users" element={user ? <Users /> : <Login />} />
           </>

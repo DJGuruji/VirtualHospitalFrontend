@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { getPosts, deletePost } from "../services/PostService";
 import { Link } from "react-router-dom";
 import { useAuthStore } from "../store/authStore";
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 import config from "../config";
 
 const Home = () => {
@@ -66,11 +66,11 @@ const Home = () => {
   }
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Latest Posts</h1>
+    <div className="min-h-screen mx-auto p-4 dark:bg-slate-900 ">
+   
 
       {loading ? (
-        <p className="text-center">Loading posts...</p>
+        <p className="text-center dark:text-white">Loading posts...</p>
       ) : (
         posts.map((post) => {
           const { _id, user: postUser, postName, postImage, postDescription } = post;
@@ -86,7 +86,7 @@ const Home = () => {
 
           return (
             <div
-              className="bg-white rounded-lg shadow-md overflow-hidden md:flex md:flex-row mb-6"
+              className="bg-white dark:bg-slate-800 rounded-lg shadow-md overflow-hidden md:flex md:flex-row mb-6"
               key={_id}
             >
               <div className="w-full md:w-1/2 h-1/3 md:flex-shrink-0">
@@ -94,15 +94,15 @@ const Home = () => {
                   <p className="text-gray-600 p-2 ml-5">
                     <Link
                       to={postLink}
-                      className="text-blue-600 hover:underline text-lg"
+                      className="text-blue-600 dark:text-blue-400 hover:underline text-lg"
                     >
                       {postUser.name}
                     </Link>
                   </p>
                 ) : (
-                  <p className="text-gray-600 p-2 ml-5">Unknown User</p>
+                  <p className="text-gray-600 p-2 ml-5 dark:text-gray-400">VMA User</p>
                 )}
-                <h2 className="text-xl font-bold mb-2 text-center">
+                <h2 className="text-xl font-bold mb-2 text-center dark:text-white">
                   {postName}
                 </h2>
                 <img
@@ -113,7 +113,7 @@ const Home = () => {
                 />
               </div>
               <div className="p-4 md:w-1/2">
-                <p className="text-gray-700 mb-2 md:mt-24 lg:mt-24 xl:mt-24 text-justify">
+                <p className="text-gray-700 dark:text-gray-100 mb-2 md:mt-24 lg:mt-24 xl:mt-24 text-justify">
                   {description}
                 </p>
                 <button

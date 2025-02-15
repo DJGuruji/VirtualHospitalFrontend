@@ -3,6 +3,7 @@ import axios from "../axios";
 import { AiOutlineSearch } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import debounce from "lodash/debounce";
+import {toast} from "sonner"
 
 const UserSearch = () => {
   const [query, setQuery] = useState("");
@@ -18,7 +19,7 @@ const UserSearch = () => {
       const response = await axios.get(`users/search?query=${searchQuery}`);
       setResults(response.data);
     } catch (error) {
-      console.error("Error searching for users:", error);
+      toast.error("Error searching for users:", error);
     }
   };
 
@@ -40,9 +41,9 @@ const UserSearch = () => {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search for users"
-          className="border border-gray-300 rounded-l-md py-1 md:px-2 lg:px-2 xl:px-2 w-3/4 md:w-ful lg:w-full xl:w-full  focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          className="border dark:bg-black border-gray-300 rounded-l-md py-1 md:px-2 lg:px-2 xl:px-2 w-3/4 md:w-ful lg:w-full xl:w-full  focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
         />
-        <button type="submit" className="bg-blue-500 py-1 px-2 text-white rounded-r-md">
+        <button type="submit" className="bg-blue-500 dark:bg-blue-800 py-1 px-2 text-white rounded-r-md">
           <AiOutlineSearch />
         </button>
       </form>
