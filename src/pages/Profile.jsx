@@ -82,7 +82,7 @@ const Profile = () => {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-screen">
+      <div className="flex justify-center items-center min-h-screen dark:bg-slate-900">
         <div
           className="spinner-border inline-block w-8 h-8 border-4 rounded-full"
           role="status"

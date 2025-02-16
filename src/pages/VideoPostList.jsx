@@ -62,7 +62,7 @@ const VideoPostList = () => {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-screen">
+      <div className="flex justify-center items-center min-h-screen dark:bg-slate-900">
         <div
           className="w-8 h-8 border-4 border-blue-800 border-t-transparent rounded-full animate-spin"
           role="status"
@@ -74,7 +74,7 @@ const VideoPostList = () => {
   }
 
   return (
-    <div className="dark:bg-slate-900 p-4">
+    <div className="dark:bg-slate-900 p-4 min-h-screen ">
       {loading ? (
         <p className="text-center">Loading Videos...</p>
       ) : (
