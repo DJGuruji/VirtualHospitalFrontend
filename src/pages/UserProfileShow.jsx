@@ -175,74 +175,75 @@ const UserProfileShow = () => {
   return (
     <div className="flex justify-center items-center dark:bg-slate-900 min-h-screen">
       <div className="md:w-3/4 dark:bg-slate-800 mx-auto p-6 bg-white rounded-lg ">
-        <div className="text-center">
-          {photo && (
-            <>
-              ({" "}
-              <img
-                src={photo}
-                alt="Profile"
-                className="mx-auto w-24 h-24 rounded-full object-cover mb-4 cursor-pointer"
-                onClick={openModal}
-              />
-              ):(
-              <CgProfile className="bg-zinc-300 text-zinc-600  w-11 h-11 rounded-full cursor-pointer" />
-              )
-              <Modal
-                isOpen={isModalOpen}
-                onRequestClose={closeModal}
-                shouldCloseOnOverlayClick={true}
-                contentLabel="Enlarged Photo"
-                className="flex justify-center items-center bg-white dark:bg-slate-800 rounded-full md:w-1/2 lg:w-1/2 xl:w-1/2 md:h-1/2 lg:h-1/2 xl:h-1/2"
-                overlayClassName="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center"
-              >
-                <div className="relative flex justify-center">
-                  <img
-                    src={config.API_URL + `${photo}`}
-                    alt="Enlarged Profile"
-                    className="rounded-full w-full h-full"
-                  />
-                </div>
-              </Modal>
-            </>
-          )}
-          <h2 className="text-3xl font-semibold mb-2 dark:text-white">
-            {user.role === "doctor" ? `Dr. ${name}` : name}
-          </h2>
-
-          <p className="text-gray-600  dark:text-gray-300">{job}</p>
-          <div className="flex justify-center p-3">
-            <Link
-              to={`/following/${userId}`}
-              className="cursor-pointer text-blue-500 dark:text-blue-300"
-            >
-              {followingCount} Following
-            </Link>
-            <Link
-              to={`/followers/${userId}`}
-              className="ml-5 cursor-pointer text-blue-500 dark:text-blue-300"
-            >
-              {followersCount} Followers
-            </Link>
-          </div>
-          {user &&
-            user.email !== email &&
-            (!isFollowing ? (
-              <button
-                onClick={() => followUser(userId)}
-                className="bg-blue-600 hover:bg-blue-700 p-1 rounded-md text-white m-2"
-              >
-                Follow
-              </button>
-            ) : (
-              <button
-                onClick={() => unfollowUser(userId)}
-                className="bg-blue-600 hover:bg-blue-700 p-1 rounded-md text-white m-2"
-              >
-                Following
-              </button>
-            ))}
+      <div className="text-center">
+  {photo ? (
+    <>
+      <img
+        src={photo}
+        alt="Profile"
+        className="mx-auto w-24 h-24 rounded-full object-cover mb-4 cursor-pointer"
+        onClick={openModal}
+      />
+      <Modal
+        isOpen={isModalOpen}
+        onRequestClose={closeModal}
+        shouldCloseOnOverlayClick={true}
+        contentLabel="Enlarged Photo"
+        className="flex justify-center items-center bg-white dark:bg-slate-800 rounded-full md:w-1/2 lg:w-1/2 xl:w-1/2 md:h-1/2 lg:h-1/2 xl:h-1/2"
+        overlayClassName="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center"
+      >
+        <div className="relative flex justify-center">
+          <img
+            src={config.API_URL + `${photo}`}
+            alt="Enlarged Profile"
+            className="rounded-full w-full h-full"
+          />
         </div>
+      </Modal>
+    </>
+  ) : (
+    <CgProfile className="bg-zinc-300 text-zinc-600 w-11 h-11 rounded-full cursor-pointer" />
+  )}
+
+  <h2 className="text-3xl font-semibold mb-2 dark:text-white">
+    {user.role === "doctor" ? `Dr. ${name}` : name}
+  </h2>
+
+  <p className="text-gray-600 dark:text-gray-300">{job}</p>
+  <div className="flex justify-center p-3">
+    <Link
+      to={`/following/${userId}`}
+      className="cursor-pointer text-blue-500 dark:text-blue-300"
+    >
+      {followingCount} Following
+    </Link>
+    <Link
+      to={`/followers/${userId}`}
+      className="ml-5 cursor-pointer text-blue-500 dark:text-blue-300"
+    >
+      {followersCount} Followers
+    </Link>
+  </div>
+
+  {user && user.email !== email && (
+    !isFollowing ? (
+      <button
+        onClick={() => followUser(userId)}
+        className="bg-blue-600 hover:bg-blue-700 p-1 rounded-md text-white m-2"
+      >
+        Follow
+      </button>
+    ) : (
+      <button
+        onClick={() => unfollowUser(userId)}
+        className="bg-blue-600 hover:bg-blue-700 p-1 rounded-md text-white m-2"
+      >
+        Following
+      </button>
+    )
+  )}
+</div>
+
         {/* grid grid-cols-1 md:grid-cols-2 gap-4 */}
         <div className=" md:flex lg:flex xl:flex  justify-center ">
           <div className="m-2">

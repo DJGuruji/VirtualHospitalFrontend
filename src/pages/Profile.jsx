@@ -65,7 +65,7 @@ const Profile = () => {
       formData.append("office", office);
       formData.append("officePlace", officePlace);
 
-      // Note: Removing manual Content-Type header allows Axios to set the correct boundary.
+  console.log(formData);
       const response = await axios.put(`/users/profile/${userId}`, formData, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
