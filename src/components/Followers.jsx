@@ -3,7 +3,7 @@ import axios from "../axios";
 import { toast } from "sonner";
 import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
-import config from "../config";
+
 
 const Followers = () => {
   const { userId } = useParams();
@@ -48,22 +48,22 @@ const Followers = () => {
   };
 
   return (
-    <div>
-      <h2 className="text-xl font-semibold mb-2">Followers</h2>
+    <div className="min-h-screen dark:bg-slate-800">
+      <h2 className="text-xl font-semibold mb-2 dark:text-white  ">Followers</h2>
       {followers.map((follower) => (
          <Link to={`/profile/${follower._id}`}>
-        <div key={follower._id} className="hover:bg-zinc-200 follower-item flex items-center justify-between py-2 px-4 border-b">
+        <div key={follower._id} className="hover:bg-zinc-200 dark:hover:bg-slate-900 follower-item flex items-center justify-between py-2 px-4 border-b">
           <div className="flex items-center">
             {follower.photo && (
               <img
-                src={config.API_URL + `${follower.photo}`}
+                src={follower.photo}
                 alt="Follower"
                 className="w-10 h-10 rounded-full mr-3"
               />
             )}
             <span>
            
-              <p>
+              <p className="dark:text-white">
               {follower.name}
               </p>
               

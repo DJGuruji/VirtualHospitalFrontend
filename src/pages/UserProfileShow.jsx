@@ -189,20 +189,20 @@ const UserProfileShow = () => {
         onRequestClose={closeModal}
         shouldCloseOnOverlayClick={true}
         contentLabel="Enlarged Photo"
-        className="flex justify-center items-center bg-white dark:bg-slate-800 rounded-full md:w-1/2 lg:w-1/2 xl:w-1/2 md:h-1/2 lg:h-1/2 xl:h-1/2"
+        className="flex justify-center items-center  rounded-full "
         overlayClassName="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center"
       >
-        <div className="relative flex justify-center">
+       
           <img
-            src={config.API_URL + `${photo}`}
+            src={photo}
             alt="Enlarged Profile"
-            className="rounded-full w-full h-full"
+            className="rounded-full"
           />
-        </div>
+   
       </Modal>
     </>
   ) : (
-    <CgProfile className="bg-zinc-300 text-zinc-600 w-11 h-11 rounded-full cursor-pointer" />
+    <CgProfile className="bg-zinc-300 text-zinc-600 w-11 h-11 mx-auto rounded-full cursor-pointer" />
   )}
 
   <h2 className="text-3xl font-semibold mb-2 dark:text-white">

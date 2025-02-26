@@ -48,23 +48,23 @@ const Following = () => {
   };
 
   return (
-    <div>
-      <h2 className="text-xl font-semibold mb-2">Following</h2>
+    <div className="min-h-screen dark:bg-slate-800 ">
+      <h2 className="text-xl font-semibold mb-2 dark:text-white">Following</h2>
       {following.map((following) => (
         <Link to={`/profile/${following._id}`}>
           <div
             key={following._id}
-            className="following-item flex items-center justify-between py-2 px-4 border-b hover:bg-zinc-200"
+            className="following-item flex items-center justify-between py-2 px-4 border-b hover:bg-zinc-200 dark:hover:bg-slate-900"
           >
             <div className="flex items-center ">
               {following.photo && (
                 <img
-                  src={config.API_URL + `${following.photo}`}
+                  src={following.photo}
                   alt="Following"
                   className="w-10 h-10 rounded-full mr-3"
                 />
               )}
-              <span>
+              <span className="dark:text-white">
                 <p>{following.name}</p>
               </span>
             </div>
