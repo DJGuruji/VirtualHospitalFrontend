@@ -3,12 +3,17 @@ import axios from "../../axios";
 import { toast } from "sonner";
 import { Link } from "react-router-dom";
 import { useAuthStore } from "../../store/authStore";
+import Modal from "react-modal";
+
+Modal.setAppElement("#root");
 
 const Users = () => {
   const { user } = useAuthStore();
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [selectedImage, setSelectedImage] = useState("");
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -36,6 +41,16 @@ const Users = () => {
 
     fetchUsers();
   }, []);
+
+  const openModal = (imageUrl) => {
+    setSelectedImage(imageUrl);
+    setModalIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalIsOpen(false);
+    setSelectedImage("");
+  };
 
   // Filter users based on search query
   const filteredUsers = users.filter(
@@ -121,10 +136,14 @@ const Users = () => {
 
   return (
     <div className="dark:bg-slate-900 min-h-screen">
-      <h1 className="text-center text-zinc-800 dark:text-white mb-4 text-xl">All Users </h1>
+      <h1 className="text-center text-zinc-800 dark:text-white mb-4 text-xl">
+        All Users{" "}
+      </h1>
 
       <div className="mb-4">
-        <label className="text-xl text-zinc-500 dark:text-white ">Filter </label>
+        <label className="text-xl text-zinc-500 dark:text-white ">
+          Filter{" "}
+        </label>
         <input
           type="text"
           value={searchQuery}
@@ -161,12 +180,26 @@ const Users = () => {
             <tbody>
               {filteredUsers.map((user) => (
                 <tr key={user._id} className="border-t">
-                  <td className="px-4 py-2">
+                  <td className="px-8 py-2">
                     <Link
                       to={`/profile/${user._id}`}
                       className="text-blue-600 dark:text-blue-300 hover:underline"
                     >
-                      {user.role === "doctor" ? `Dr. ${user.name}` : user.name}
+                      <span className="flex flex-col  items-center">
+                        {user.photo ? (
+                          <img
+                            src={user.photo}
+                            alt=""
+                            className="mx-auto w-12 h-12 rounded-full object-cover mb-4 cursor-pointer"
+                          />
+                        ) : (
+                          ""
+                        )}
+                      
+                        {user.role === "doctor"
+                          ? `Dr. ${user.name}`
+                          : user.name}
+                      </span>
                     </Link>
                   </td>
                   <td className="px-4 py-2">{user.role}</td>
@@ -230,6 +263,31 @@ const Users = () => {
           </table>
         </div>
       )}
+
+      <Modal
+        isOpen={modalIsOpen}
+        onRequestClose={closeModal}
+        shouldCloseOnOverlayClick={true}
+        className="fixed inset-0 flex items-center justify-center p-4"
+        overlayClassName="fixed inset-0 bg-black bg-opacity-75"
+      >
+        <div className="relative bg-white dark:bg-slate-900 p-4 rounded-lg shadow-lg max-w-2xl">
+          {/* Close Button */}
+          <button
+            onClick={closeModal}
+            className="absolute top-2 right-2 bg-red-500 text-white px-3 py-1 rounded"
+          >
+            ✕
+          </button>
+
+          {/* Enlarged Image */}
+          <img
+            src={selectedImage}
+            alt="Enlarged View"
+            className="max-w-full h-full md:max-h-[90vh] rounded-lg"
+          />
+        </div>
+      </Modal>
     </div>
   );
 };

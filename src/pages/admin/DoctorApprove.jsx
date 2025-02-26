@@ -3,6 +3,7 @@ import axios from "../../axios";
 import { toast } from "sonner";
 import { useAuthStore } from "../../store/authStore";
 import Modal from "react-modal";
+import { Link } from "react-router-dom";
 
 Modal.setAppElement("#root");
 
@@ -177,18 +178,22 @@ const DoctorApprove = () => {
                   className="text-center dark:bg-slate-800 dark:text-white"
                 >
                   <td className="border p-2">
-                    <span className="">
-                    {doc.photo?   <img
-                        src={doc.photo}
-                        alt=""
-                        className="mx-auto w-12 h-12 rounded-full object-cover mb-4 cursor-pointer"
-                        onClick={() =>
-                          openModal(doc.photo)
-                        }
-                      /> : ""}
-                      Dr.{doc.name}
-                    </span>
+                    <Link
+                      to={`/profile/${doc._id}`}
+                      className="flex flex-col items-center"
+                    >
+                      {doc.photo ? (
+                        <img
+                          src={doc.photo}
+                          alt="Doctor"
+                          className="mx-auto w-12 h-12 rounded-full object-cover mb-2 cursor-pointer"
+                          onClick={() => openModal(doc.photo)}
+                        />
+                      ) : null}
+                      <span>Dr. {doc.name}</span>
+                    </Link>
                   </td>
+
                   <td className="border p-2">
                     {doc.doctorInfo.specialization}
                   </td>
