@@ -131,7 +131,7 @@ function AIChat() {
             value={prompt}
             onChange={handleChange}
             placeholder="Type a message..."
-            className={`w-full p-3 pr-14 border rounded-md focus:outline-none focus:ring-2 "bark:order-gray-600 dark:bg-gray-700 text-white focus:ring-blue-400 border-gray-300 focus:ring-blue-500"
+            className={`w-full p-3 pr-14 border rounded-md focus:outline-none focus:ring-2 "bark:order-gray-600 dark:bg-gray-700 dark:text-white  focus:ring-blue-400 border-gray-300 focus:ring-blue-500"
             }`}
             style={{ height }}
           />
