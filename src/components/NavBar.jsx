@@ -283,6 +283,7 @@ const Navbar = () => {
                       <MdOutlineVideoLibrary className="mr-1" /> Videos
                     </NavLink>
                   </li>
+                  {(user.role === "admin" || user.role === "staff" || user.role === "doctor") && (
                   <li className="list-none  self-center">
                     <NavLink
                       to="/addwork"
@@ -295,6 +296,7 @@ const Navbar = () => {
                       <MdWorkspacePremium className="mr-1" /> Add Work
                     </NavLink>
                   </li>
+                  )}
                 </>
               )}
               {(user.role === "admin" || user.role === "staff") && (

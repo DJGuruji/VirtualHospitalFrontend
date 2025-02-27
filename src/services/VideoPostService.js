@@ -9,10 +9,13 @@ export const createVideoPost = async (videoPostData) => {
   return response.data;
 };
 
-export const getVideoPosts = async (userId) => {
+export const getVideoPosts = async (userId, page = 0) => {
+  const validPage = Number.isInteger(page) ? page : 0; // Ensure valid page number
+
   const response = await axios.get('/videoposts', {
-    params: { userId },
+    params: { userId: userId || undefined, limit: 5, skip: validPage * 5 },
   });
+
   return response.data;
 };
 

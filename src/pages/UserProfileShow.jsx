@@ -28,6 +28,7 @@ const UserProfileShow = () => {
   const [showPosts, setShowPosts] = useState(false);
   const [showMore, setShowMore] = useState({});
   const [loadingPosts, setLoadingPosts] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isFollowing, setIsFollowing] = useState(false);
   const [followersCount, setFollowersCount] = useState(0);
@@ -35,6 +36,7 @@ const UserProfileShow = () => {
 
   useEffect(() => {
     const fetchUserData = async () => {
+      setLoading(true);
       try {
         const response = await axios.get(`admin/profile/${userId}`, {
           headers: {
@@ -59,6 +61,8 @@ const UserProfileShow = () => {
         setFollowingCount(userData.following.length);
       } catch (error) {
         toast.error(`Error fetching user profile: ${error.message}`);
+      }finally{
+        setLoading(false);
       }
     };
 
@@ -159,6 +163,20 @@ const UserProfileShow = () => {
     }
   };
 
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen dark:bg-slate-900">
+        <div
+          className="w-8 h-8 border-4 border-blue-800 border-t-transparent rounded-full animate-spin"
+          role="status"
+        >
+          <span className="sr-only">Loading...</span>
+        </div>
+      </div>
+    );
+  }
+
+
   if (loadingPosts) {
     return (
       <div className="flex justify-center items-center min-h-screen dark:bg-slate-900">
@@ -206,7 +224,7 @@ const UserProfileShow = () => {
   )}
 
   <h2 className="text-3xl font-semibold mb-2 dark:text-white">
-    {user.role === "doctor" ? `Dr. ${name}` : name}
+    {role === "doctor" ? `Dr. ${name}` : name}
   </h2>
 
   <p className="text-gray-600 dark:text-gray-300">{job}</p>
