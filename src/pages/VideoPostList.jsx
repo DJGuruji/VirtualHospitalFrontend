@@ -212,7 +212,7 @@ const VideoPostList = () => {
               <h2 className="text-xl font-bold mb-2 text-center dark:text-white">
                 {postName}
               </h2>
-              <div className="relative w-full h-96 pb-10 pl-10 z-10">
+              <div className="relative w-full h-96 pb-10 md:pl-10 z-10">
                 <video
                   className="w-full h-full object-cover"
                   controls
@@ -379,7 +379,7 @@ const VideoPostList = () => {
       })}
 
       {loading && (
-        <div className="flex justify-center items-center">
+        <div className="min-h-screen flex justify-center items-center">
           <div className="w-8 h-8 border-4 border-blue-800 border-t-transparent rounded-full animate-spin" />
         </div>
       )}

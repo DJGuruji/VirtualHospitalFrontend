@@ -221,7 +221,7 @@ const MyVideo = () => {
                 <h2 className="text-xl font-bold mb-2 text-center dark:text-white">
                   {postName}
                 </h2>
-                <div className="relative w-full h-96 pb-12 pl-12 z-10">
+                <div className="relative w-full h-96 pb-12 md:pl-12 z-10">
                 <video
                   className="w-full h-full object-cover"
                   controls
