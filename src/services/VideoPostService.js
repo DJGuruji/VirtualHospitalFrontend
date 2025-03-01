@@ -33,3 +33,44 @@ export const deleteVideoPost = async (videoPostId) => {
   const response = await axios.delete(`/videoposts/${videoPostId}`);
   return response.data;
 };
+
+
+
+export const likevideo = async (postId) => {
+  const token = localStorage.getItem("token");
+  const response = await axios.put(`/videoposts/like/${postId}`, {}, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return response.data;
+};
+
+export const addComment = async (postId, text) => {
+  const token = localStorage.getItem("token");
+  const response = await axios.post(`/videoposts/comment/${postId}`, { text }, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return response.data;
+};
+
+
+export const getComments = async (postId) => {
+  try {
+    const response = await axios.get(`/videoposts/comments/${postId}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching comments:", error);
+    return [];
+  }
+};
+
+export const deleteComment = async (commentId) => {
+  try {
+    const token = localStorage.getItem("token");
+    await axios.delete(`/videoposts/comment/${commentId}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+  } catch (error) {
+    console.error("Error deleting comment:", error.response?.data || error.message);
+    throw error;
+  }
+};

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "../../axios";
 import { toast } from "sonner";
 import { useAuthStore } from "../../store/authStore";
-
+import { Link } from "react-router-dom";
 const AppointmentHistory = () => {
   const { user } = useAuthStore();
   const userId = user?._id;
@@ -66,7 +66,7 @@ const AppointmentHistory = () => {
     const [year, month, day] = dateString.split("-");
     return `${day}-${month}-${year}`;
   };
-  
+
   // Corrected filtering logic
   const filteredAppointments = appointments.filter((appointment) => {
     const patientName =
@@ -74,7 +74,7 @@ const AppointmentHistory = () => {
       (appointment.user && appointment.user.name) ||
       "";
     const doctorName = (appointment.doctor && appointment.doctor.name) || "";
-    const date = formatDate(appointment.date )|| "";
+    const date = formatDate(appointment.date) || "";
     const timeSlot = appointment.timeSlot || "";
     const status = appointment.status || "";
     const searchLower = searchTerm.toLowerCase();
@@ -105,9 +105,6 @@ const AppointmentHistory = () => {
     setCurrentPage(pageNumber);
   };
 
-  
-
-
   return (
     <div className="dark:bg-slate-900 w-full min-h-screen flex justify-center">
       <div className="w-full dark:bg-slate-900">
@@ -125,7 +122,7 @@ const AppointmentHistory = () => {
           />
         </div>
         <p className="font-semibold text-red-600 p-5">
-          Can't cancel when appointment is confirmed!
+          Appointment Can't be Cancelled When it is Confirmed
         </p>
         {loading ? (
           <p className="dark:text-gray-200">Loading appointments...</p>
@@ -150,10 +147,30 @@ const AppointmentHistory = () => {
                       key={appointment._id}
                       className="dark:text-gray-100 text-center"
                     >
+                      {" "}
+                      <Link
+                        to={`/profile/${appointment.doctor._id}`}
+                        className="text-blue-600 dark:text-blue-300 hover:underline"
+                      >
+                        {" "}
+                        <span className="flex justify-center items-center mx-auto mt-3">
+                          {appointment.doctor.photo ? (
+                            <img
+                              src={appointment.doctor.photo}
+                              alt=""
+                              className=" w-12 h-12 rounded-full object-cover mb-4 cursor-pointer"
+                            />
+                          ) : (
+                            ""
+                          )}
+                          <td className="">
+                            Dr.{appointment.doctor?.name || "Unknown"}
+                          </td>
+                        </span>
+                      </Link>
                       <td className="px-4 py-2 border">
-                        Dr.{appointment.doctor?.name || "Unknown"}
+                        {formatDate(appointment.date)}
                       </td>
-                      <td className="px-4 py-2 border">{formatDate(appointment.date)}</td>
                       <td className="px-4 py-2 border">
                         {appointment.timeSlot}
                       </td>
