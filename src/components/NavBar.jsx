@@ -41,7 +41,7 @@ const Navbar = () => {
 
   const handleLogoutAndToggle = () => {
     logout();
-    toggleSubmenu();
+    closeDropdown();
     navigate("/login");
   };
 
