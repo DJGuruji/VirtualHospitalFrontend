@@ -108,7 +108,9 @@ const App = () => {
           </>
         )}
       </Routes>
+      {user && (
       <Footer></Footer>
+      )}
     </Router>
   );
 };
