@@ -6,7 +6,7 @@ import { BsChatSquareDots } from "react-icons/bs";
 
 const Footer = () => {
   return (
-    <div className="sticky bottom-0 md:hidden dark:bg-gray-900 p-2 backdrop-blur-lg bg-gray-100">
+    <div className="sticky bottom-0 md:hidden dark:bg-gray-900 p-2 backdrop-blur-lg bg-gray-100 z-50">
       <ul className="flex justify-between items-center dark:text-white flex-wrap gap-4">
         <li className="p-2">
           <NavLink to="/" className="flex items-center p-2 rounded-xl">
