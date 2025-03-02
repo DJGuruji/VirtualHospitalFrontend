@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AiOutlineMail, AiOutlineLock } from 'react-icons/ai';
+import { AiOutlineMail, AiOutlineLock, AiOutlineEye, AiOutlineEyeInvisible  } from 'react-icons/ai';
 import axios from '../axios';
 import { useAuthStore } from '../store/authStore';
 import { Link } from 'react-router-dom';
@@ -16,6 +16,8 @@ const Login = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false); 
   const { login } = useAuthStore();
+  const [showPassword, setShowPassword] = useState(false);
+
 
   const onChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -34,6 +36,10 @@ const Login = () => {
     finally {
       setLoading(false); // Step 4: Reset loading state after signup attempt (whether success or error)
     }
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
   };
 
   return (
@@ -60,7 +66,7 @@ const Login = () => {
           <div className="flex items-center border border-gray-300 dark:bg-slate-700 rounded-md px-3 py-2">
             <AiOutlineLock className="text-gray-600 dark:text-white mr-2" />
             <input
-              type="password"
+              type={showPassword ? 'text' : 'password'}
               name="password"
               value={password}
               onChange={onChange}
@@ -68,6 +74,9 @@ const Login = () => {
               className="w-full outline-none dark:text-white dark:bg-slate-700"
               placeholder="Enter your password"
             />
+               <button type="button" onClick={togglePasswordVisibility} className="ml-2 focus:outline-none">
+              {showPassword ? <AiOutlineEyeInvisible className="text-gray-600 dark:text-white" /> : <AiOutlineEye className="text-gray-600 dark:text-white" />}
+            </button>
           </div>
         </div>
         <button type="submit" className="w-full bg-blue-300 font-bold text-blue-800 border-2 border-blue-800 py-2 rounded-md hover:bg-blue-400 transition duration-200">

@@ -108,8 +108,10 @@ const VideoPostList = () => {
             ? {
                 ...video,
                 likesCount: response.likesCount,
-                likedBy: response.likedBy,
-              }
+                likedBy: response.likedBy.includes(user._id)
+                ? response.likedBy
+                : [...response.likedBy, user._id], // Update likedBy list properly
+            }
             : video
         )
       );
@@ -177,15 +179,14 @@ const VideoPostList = () => {
           description.length > 100
             ? `${description.substring(0, 100)}...`
             : description;
-        const isLiked = likedBy?.some(
-          (likedUserId) => likedUserId === user?._id
-        );
+            const isLiked = post.likes.some((like) => like._id === user.id);
+
         const isAdmin = user && user.role === "admin";
 
         return (
           <div
             key={_id}
-            className="bg-white dark:bg-slate-900 rounded-lg shadow-md md:flex md:flex-row mb-6 border border-gray-700"
+            className="bg-white dark:bg-slate-900 rounded-lg shadow-md md:flex md:flex-row mb-6 "
           >
             <div className="w-full md:w-1/2 md:h-1/2 md:flex-shrink-0">
               <p className="text-gray-600 p-2 ml-5">
@@ -227,11 +228,11 @@ const VideoPostList = () => {
                     className="flex items-center gap-1 ext-xl "
                   >
                     {isLiked ? (
-                      <FaHeart className="text-red-500  " />
+                      <FaHeart className="text-red-500 text-2xl " />
                     ) : (
-                      <FaRegHeart className="dark:text-white " />
+                      <FaRegHeart className="dark:text-white text-2xl" />
                     )}
-                    <span className="dark:text-white ">{likesCount || 0}</span>
+                    <span className="dark:text-white text-2xl">{likesCount || 0}</span>
                   </button>
                   <button
                     onClick={() => {
@@ -240,7 +241,7 @@ const VideoPostList = () => {
                     }}
                     className="flex items-center gap-1"
                   >
-                    <FaComment className="text-gray-500 dark:text-white " />
+                    <FaComment className="text-gray-500 dark:text-white text-2xl" />
                   </button>
                   {isAdmin && (
                     <button onClick={() => deletePostHandler(_id)} className="">

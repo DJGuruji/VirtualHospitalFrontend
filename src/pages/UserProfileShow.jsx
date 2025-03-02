@@ -440,14 +440,14 @@ const UserProfileShow = () => {
         {/* Review Popup */}
         {isReviewPopupOpen && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-            <div className="bg-white dark:bg-slate-600 p-6 rounded-lg w-full md:w-1/2 lg:w-1/3">
+            <div className="bg-white dark:bg-slate-900 p-6 rounded-lg w-full md:w-1/2 lg:w-1/3">
               <div className="flex justify-between items-center mb-4">
                 <h3 className="text-xl font-semibold text-gray-800 dark:text-white">
                   Reviews
                 </h3>
                 <button
                   onClick={closeReviewPopup}
-                  className="text-red-500 text-2xl hover:bg-white hover:rounded-full"
+                  className="text-red-500 text-2xl  hover:rounded-full"
                 >
                   &times;
                 </button>
@@ -455,7 +455,7 @@ const UserProfileShow = () => {
               {/* List of reviews */}
               <div className="max-h-60 overflow-y-auto mb-4">
                 {reviews.length === 0 ? (
-                  <p className="text-gray-600 dark:text-gray-300">
+                  <p className="text-gray-600 dark:text-gray-200">
                     No reviews yet.
                   </p>
                 ) : (
@@ -483,7 +483,7 @@ const UserProfileShow = () => {
                             to={commentLink}
                             className="text-blue-600 dark:text-blue-400 hover:underline text-lg"
                           >
-                            <p className="text-sm font-semibold text-blue-700">
+                            <p className="text-sm font-semibold text-blue-700 dark:text-blue-400">
                               {rev.reviewer.name || "Unknown User"}
                             </p>
                           </Link>

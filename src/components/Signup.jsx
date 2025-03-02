@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { AiOutlineUser, AiOutlinePhone, AiOutlineMail, AiOutlineLock } from 'react-icons/ai';
+import { AiOutlineUser, AiOutlinePhone, AiOutlineMail, AiOutlineLock, AiOutlineEye, AiOutlineEyeInvisible  } from 'react-icons/ai';
 import axios from '../axios';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
@@ -18,9 +18,14 @@ const Signup = () => {
   const { name, mobile, email, password, confirmPassword } = formData;
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false); // Step 1: Loading state
+  const [showPassword, setShowPassword] = useState(false);
 
   const onChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
   };
 
   const onSubmit = async (e) => {
@@ -110,7 +115,7 @@ const Signup = () => {
           <div className="flex dark:bg-slate-700 items-center border border-gray-300 rounded-md px-3 py-2">
             <AiOutlineLock className="text-gray-600 mr-2 dark:text-white" />
             <input
-              type="password"
+             type={showPassword ? 'text' : 'password'}
               name="password"
               value={password}
               onChange={onChange}
@@ -118,6 +123,9 @@ const Signup = () => {
               className="w-full outline-none dark:text-white dark:bg-slate-700"
               placeholder="Enter your password"
             />
+              <button type="button" onClick={togglePasswordVisibility} className="ml-2 focus:outline-none">
+              {showPassword ? <AiOutlineEyeInvisible className="text-gray-600 dark:text-white" /> : <AiOutlineEye className="text-gray-600 dark:text-white" />}
+            </button>
           </div>
         </div>
         <div className="mb-4">
@@ -125,7 +133,7 @@ const Signup = () => {
           <div className="flex dark:bg-slate-700 items-center border border-gray-300 rounded-md px-3 py-2">
             <AiOutlineLock className="text-gray-600 mr-2 dark:text-white" />
             <input
-              type="password"
+             type={showPassword ? 'text' : 'password'}
               name="confirmPassword"
               value={confirmPassword}
               onChange={onChange}
@@ -133,6 +141,9 @@ const Signup = () => {
               className="w-full outline-none dark:text-white dark:bg-slate-700"
               placeholder="Confirm your password"
             />
+              <button type="button" onClick={togglePasswordVisibility} className="ml-2 focus:outline-none">
+              {showPassword ? <AiOutlineEyeInvisible className="text-gray-600 dark:text-white" /> : <AiOutlineEye className="text-gray-600 dark:text-white" />}
+            </button>
           </div>
         </div>
         <button type="submit" className="w-full bg-blue-300 font-bold text-blue-800 border-2 border-blue-800 py-2 rounded-md hover:bg-blue-400 transition duration-200">

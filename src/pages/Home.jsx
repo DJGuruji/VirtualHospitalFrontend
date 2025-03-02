@@ -75,8 +75,10 @@ const Home = () => {
           post._id === postId
             ? {
                 ...post,
-                likesCount: response.likesCount, // ✅ Update count correctly
-                likedBy: response.likedBy,
+                likesCount: response.likesCount, // Ensure this is correct
+                likedBy: response.likedBy.includes(user._id)
+                  ? response.likedBy
+                  : [...response.likedBy, user._id], // Update likedBy list properly
               }
             : post
         )
@@ -173,7 +175,10 @@ const Home = () => {
         const description = showMore[_id]
           ? postDescription
           : `${postDescription.substring(0, 100)}...`;
-          const isLiked = likedBy?.some((likedUserId) => likedUserId === user?._id);
+     
+          const isLiked = post.likes.some((like) => like._id === user.id);
+
+
         const isAdmin = user && user.role === "admin";
 
         return (
@@ -197,8 +202,11 @@ const Home = () => {
                   ) : (
                     <CgProfile className="m-1 w-10 h-10 rounded-full bg-gray-700 text-gray-400 dark:text-gray-100 " />
                   )}
-                     <p>{postUser.role === "doctor" ? `Dr. ${postUser.name}` : postUser.name}</p>
-          
+                  <p>
+                    {postUser.role === "doctor"
+                      ? `Dr. ${postUser.name}`
+                      : postUser.name}
+                  </p>
                 </Link>
               </p>
             ) : (
@@ -218,15 +226,16 @@ const Home = () => {
                 <div className="flex items-center gap-4 mt-3">
                   <button
                     onClick={() => handleLike(_id)}
-                    className="flex items-center gap-1 ext-xl "
+                    className="flex items-center gap-1 text-xl"
                   >
                     {isLiked ? (
-                      <FaHeart className="text-red-500  " />
+                      <FaHeart className="text-red-500 text-2xl" />
                     ) : (
-                      <FaRegHeart className="dark:text-white " />
+                      <FaRegHeart className="dark:text-white text-2xl" />
                     )}
-                    <span className="dark:text-white ">{likesCount || 0}</span>
+                    <span className="dark:text-white text-2xl">{likesCount || 0}</span>
                   </button>
+
                   <button
                     onClick={() => {
                       fetchComments(_id);
@@ -234,13 +243,10 @@ const Home = () => {
                     }}
                     className="flex items-center gap-1"
                   >
-                    <FaComment className="text-gray-500 dark:text-white " />
+                    <FaComment className="text-gray-500 dark:text-white text-2xl" />
                   </button>
                   {isAdmin && (
-                    <button
-                      onClick={() => deletePostHandler(_id)}
-                      className=""
-                    >
+                    <button onClick={() => deletePostHandler(_id)} className="">
                       <MdDelete className="hover:text-red-600 text-2xl  text-red-500 "></MdDelete>
                     </button>
                   )}

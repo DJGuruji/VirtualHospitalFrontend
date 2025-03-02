@@ -72,6 +72,7 @@ const PostList = () => {
     }));
   };
 
+
   const handleLike = async (postId) => {
     try {
       const response = await likePost(postId);
@@ -80,8 +81,10 @@ const PostList = () => {
           post._id === postId
             ? {
                 ...post,
-                likesCount: response.likesCount, 
-                likedBy: response.likedBy, // Update likedBy in state
+                likesCount: response.likesCount, // Ensure this is correct
+                likedBy: response.likedBy.includes(user._id)
+                  ? response.likedBy
+                  : [...response.likedBy, user._id], // Update likedBy list properly
               }
             : post
         )
@@ -184,7 +187,7 @@ const PostList = () => {
         const description = showMore[_id]
           ? postDescription
           : `${postDescription.substring(0, 100)}...`;
-          const isLiked = likedBy?.some((likedUserId) => likedUserId === user?._id);
+          const isLiked = post.likes.some((like) => like._id === user.id);
 
         const isAdmin = user && user.role === "admin";
         console.log("likedBy:", likedBy, "user.id:", user?.id, "isLiked:", isLiked);
@@ -234,11 +237,11 @@ const PostList = () => {
                     className="flex items-center gap-1 ext-xl "
                   >
                     {isLiked ? (
-                      <FaHeart className="text-red-500  " />
+                      <FaHeart className="text-red-500  text-2xl " />
                     ) : (
-                      <FaRegHeart className=" dark:text-white " />
+                      <FaRegHeart className=" dark:text-white text-2xl" />
                     )}
-                    <span className="dark:text-white ">{likesCount || 0}</span>
+                    <span className="dark:text-white text-2xl">{likesCount || 0}</span>
                   </button>
                   <button
                     onClick={() => {
@@ -247,7 +250,7 @@ const PostList = () => {
                     }}
                     className="flex items-center gap-1"
                   >
-                    <FaComment className="text-gray-500 dark:text-white " />
+                    <FaComment className="text-gray-500 dark:text-white text-2xl" />
                   </button>
                   <button onClick={() => deletePostHandler(_id)} className="">
                     <MdDelete className="hover:text-red-600 text-2xl  text-red-500 "></MdDelete>

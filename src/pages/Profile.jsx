@@ -17,6 +17,7 @@ const Profile = () => {
   const [office, setOffice] = useState("");
   const [officePlace, setOfficePlace] = useState("");
   const [loading, setLoading] = useState(true);
+  const [submitLoading, setSubmitLoading] = useState(false);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -50,7 +51,7 @@ const Profile = () => {
 
   const handleUpdateProfile = async (e) => {
     e.preventDefault();
-
+    setSubmitLoading(true);
     try {
       const formData = new FormData();
       formData.append("name", name);
@@ -77,6 +78,8 @@ const Profile = () => {
     } catch (error) {
       console.error(error);
       toast.error("Error updating profile: " + error.message);
+    }finally{
+      setSubmitLoading(false);
     }
   };
 
@@ -128,11 +131,7 @@ const Profile = () => {
           {photoUrl ? (
             <img
               src={
-                // If the photoUrl is a full URL (from the backend), use it directly.
-                // Otherwise, prepend the API URL.
-                photoUrl.startsWith("http")
-                  ? photoUrl
-                  : config.API_URL + photoUrl
+                photoUrl
               }
               alt="Profile"
               className="object-cover w-full h-full rounded-full"
@@ -253,7 +252,7 @@ const Profile = () => {
           type="submit"
           className="w-full dark:bg-blue-500 hover:dark:bg-blue-400 flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
         >
-          Update Profile
+        { submitLoading ? "Updating...":"Update Profile"}
         </button>
       </form>
       </div>

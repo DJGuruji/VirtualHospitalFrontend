@@ -110,8 +110,10 @@ const MyVideo = () => {
             ? {
                 ...video,
                 likesCount: response.likesCount,
-                likedBy: response.likedBy,
-              }
+                likedBy: response.likedBy.includes(user._id)
+                ? response.likedBy
+                : [...response.likedBy, user._id], // Update likedBy list properly
+            }
             : video
         )
       );
@@ -190,9 +192,8 @@ const MyVideo = () => {
           const showMoreText = showMore[_id] ? "Read Less" : "Read More";
           const shortDescription =
             description.length > 100 ? `${description.substring(0, 100)}...` : description;
-            const isLiked = likedBy?.some(
-              (likedUserId) => likedUserId === user?._id
-            );
+            const isLiked = post.likes.some((like) => like._id === user.id);
+
             const isAdmin = user && user.role === "admin";
     
           return (
@@ -236,11 +237,11 @@ const MyVideo = () => {
                     className="flex items-center gap-1 ext-xl "
                   >
                     {isLiked ? (
-                      <FaHeart className="text-red-500  " />
+                      <FaHeart className="text-red-500 text-2xl " />
                     ) : (
-                      <FaRegHeart className="dark:text-white " />
+                      <FaRegHeart className="dark:text-white text-2xl" />
                     )}
-                    <span className="dark:text-white ">{likesCount || 0}</span>
+                    <span className="dark:text-white text-2xl">{likesCount || 0}</span>
                   </button>
                   <button
                     onClick={() => {
@@ -249,7 +250,7 @@ const MyVideo = () => {
                     }}
                     className="flex items-center gap-1"
                   >
-                    <FaComment className="text-gray-500 dark:text-white " />
+                    <FaComment className="text-gray-500 dark:text-white text-2xl" />
                   </button>
                   {isAdmin && (
                     <button onClick={() => deletePostHandler(_id)} className="">

@@ -292,7 +292,7 @@ const Navbar = () => {
                   <BsChatSquareDots className="mr-1" /> AI Chat
                 </NavLink>
               </li>
-              <li className="p-4">
+              <li className=" list-none p-4">
                     <button
                       onClick={handleLogoutAndToggle}
                       className="flex items-center bg-red-500 hover:bg-red-600 text-white rounded-md p-1"

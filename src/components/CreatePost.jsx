@@ -6,23 +6,27 @@ const CreatePost = () => {
   const [formData, setFormData] = useState({
     postName: "",
     postImage: null,
+    postImageName: "", // Store selected file name
     postDescription: "",
   });
 
-  const { postName, postDescription } = formData;
-  const [loading, setLoading] = useState(false); 
+  const { postName, postDescription, postImageName } = formData;
+  const [loading, setLoading] = useState(false);
 
   const onChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const onFileChange = (e) => {
-    setFormData({ ...formData, postImage: e.target.files[0] });
+    const file = e.target.files[0];
+    if (file) {
+      setFormData({ ...formData, postImage: file, postImageName: file.name });
+    }
   };
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true); 
+    setLoading(true);
 
     const postData = new FormData();
     postData.append("postName", formData.postName);
@@ -35,20 +39,21 @@ const CreatePost = () => {
       setFormData({
         postName: "",
         postImage: null,
+        postImageName: "",
         postDescription: "",
       });
     } catch (error) {
       toast.error(error.response?.data?.message || "An error occurred");
     } finally {
-      setLoading(false); 
+      setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen p-10 min-w-lg  flex justify-center items-center dark:bg-slate-900">
+    <div className="min-h-screen p-10 min-w-lg flex justify-center items-center dark:bg-slate-900">
       <form
         onSubmit={onSubmit}
-        className="mx-auto p-8 w-full md:w-3/4 bg-white rounded-lg shadow-lg dark:bg-slate-800 "
+        className="mx-auto p-8 w-full md:w-3/4 bg-white rounded-lg shadow-lg dark:bg-slate-800"
       >
         <h1 className="text-blue-700 dark:text-blue-400 font-bold text-xl p-6 text-center">
           Add Your Posts
@@ -84,6 +89,11 @@ const CreatePost = () => {
             required
             className="shadow dark:bg-slate-700 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           />
+          {postImageName && (
+            <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">
+              Selected file: <span className="font-medium">{postImageName}</span>
+            </p>
+          )}
         </div>
         <div className="mb-6">
           <label
@@ -104,7 +114,7 @@ const CreatePost = () => {
         <button
           type="submit"
           className="border-2 border-blue-800 bg-blue-200 hover:bg-blue-300 text-blue-800 hover:rounded-xl font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-          disabled={loading} // Disable button while loading
+          disabled={loading}
         >
           {loading ? "Creating..." : "Create Post"}
         </button>
