@@ -220,6 +220,7 @@ const VideoPostList = () => {
                   controlsList="nodownload"
                   src={video}
                   onPlay={handlePlay}
+                  onDoubleClick={() => handleLike(_id)} 
                 />
                 {/* Like & Comment Buttons at Bottom of Image */}
                 <div className="flex items-center gap-4 mt-3">
