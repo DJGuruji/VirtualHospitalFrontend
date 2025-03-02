@@ -34,6 +34,7 @@ import AppointmentBooking from "./pages/appointment/AppointmentBooking";
 import AppointmentHistory from "./pages/appointment/AppointmentHistory";
 import Appointments from "./pages/appointment/Appointments"
 import AllAppointments from "./pages/appointment/AllAppointments"
+import Footer from "./components/Footer";
 
 
 const App = () => {
@@ -107,6 +108,7 @@ const App = () => {
           </>
         )}
       </Routes>
+      <Footer></Footer>
     </Router>
   );
 };
